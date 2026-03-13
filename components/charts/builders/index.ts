@@ -159,6 +159,16 @@ function convertCurves(curves: CurveDefinition[]): CurveTemplate[] {
           fromCurve: curve.fromCurve!
         }
         
+      case 'hyperbola':
+        return {
+          ...base,
+          type: 'hyperbola' as const,
+          k: curve.k!,
+          h: curve.h,
+          v: curve.v,
+          startX: curve.startX
+        }
+        
       default:
         throw new Error(`Unknown curve type: ${(curve as CurveDefinition).type}`)
     }

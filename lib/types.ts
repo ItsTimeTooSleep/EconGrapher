@@ -67,6 +67,10 @@ export interface CurveDefinition {
   points?: Array<{ x: number; y: number }>
   smooth?: boolean
   fromCurve?: string
+  k?: number
+  h?: number
+  v?: number
+  startX?: number
 }
 
 /**
@@ -76,6 +80,7 @@ export type CurveType =
   | 'linear'
   | 'uShape'
   | 'nShape'
+  | 'hyperbola'
   | 'vertical'
   | 'horizontal'
   | 'pointSet'
