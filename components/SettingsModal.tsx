@@ -391,7 +391,6 @@ export default function SettingsModal({ open, onClose, onSave }: Props) {
                     <SelectItem key={m.id} value={m.id} className="text-foreground focus:bg-accent">
                       <div className="flex items-center gap-2">
                         {isModelThinking && <Brain className="w-3.5 h-3.5 text-primary" />}
-                        {m.features.isFast && m.id !== 'custom' && <Zap className="w-3 h-3.5 text-amber-500" />}
                         <span>{m.displayName}</span>
                         {m.recommended && (
                           <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/20 text-primary">Recommended</span>

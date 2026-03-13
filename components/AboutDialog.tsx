@@ -1,6 +1,6 @@
 'use client'
 
-import { BarChart2, Github, ExternalLink, Heart, Sparkles, Zap, TrendingUp, X, Shield } from 'lucide-react'
+import { BarChart2, Github, ExternalLink, Heart, Sparkles, TrendingUp, X, Shield } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -100,13 +100,6 @@ export function AboutDialog({ open, onOpenChange }: AboutDialogProps) {
                     </div>
                     <p className="text-xs font-medium text-foreground">Smart</p>
                     <p className="text-[10px] text-muted-foreground">Analysis</p>
-                  </div>
-                  <div className="text-center group">
-                    <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-rose-500/10 mb-2 group-hover:bg-rose-500/20 transition-colors">
-                      <Zap className="w-5 h-5 text-rose-500" />
-                    </div>
-                    <p className="text-xs font-medium text-foreground">Instant</p>
-                    <p className="text-[10px] text-muted-foreground">Generation</p>
                   </div>
                 </div>
               </div>
