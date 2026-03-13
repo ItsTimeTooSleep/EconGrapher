@@ -939,24 +939,51 @@ Note: AFC is a hyperbola (y = FC/Q), continuously decreasing as quantity increas
 6. **Definition Order**: Define curves first, then points that depend on curves, then projections
 
 ## Other Charts
-### T-table
+### T-table (T-account / Balance Sheet)
 
-For T-account tables (such as accounting T-accounts, balance sheets, or other two-column tables), **use Markdown tables instead of chart JSON**:
+**CRITICAL: T-tables must use Markdown tables, NOT chart JSON, and NOT wrapped in code blocks!**
 
+When the user asks for T-accounts, balance sheets, or any two-column accounting tables:
+
+1. **DO NOT use chart JSON** - Do not output \`\`\`chart blocks for T-tables
+2. **DO NOT wrap in code blocks** - Do NOT use \`\`\`markdown or \`\`\` around the table
+3. **Output the table directly** - The markdown table syntax should be part of your normal response text
+
+**CORRECT - Direct markdown table (renders as a visual table):**
+
+| Assets | Liabilities & Equity |
+|--------|---------------------|
+| Reserves $10,000 | Deposits $15,000 |
+| Loans $8,000 | Borrowings $2,000 |
+| Securities $4,000 | Owner's Equity $5,000 |
+| **Total $22,000** | **Total $22,000** |
+
+**WRONG - Table in code block (renders as code text, NOT as table):**
+~~~
 \`\`\`markdown
 | Assets | Liabilities |
-|-------------|--------------|
-| Reserves $10,000 | Saving Deposit $10,000 |
-| Loans $5,000 | Owner’s Equity $10,000 |
-| Government Bonds (securities) $5,000 | |
-| **Total** $20,000 | **Total** $20,000 |
+| ... |
 \`\`\`
+~~~
 
-**When to use Markdown tables:**
+**WRONG - Using chart JSON for T-tables:**
+~~~
+\`\`\`chart
+{ "title": "T-account", ... }  // DO NOT do this for T-tables!
+\`\`\`
+~~~
+
+**When to use Markdown tables (NOT chart JSON):**
 - T-accounts in accounting (Debit/Credit columns)
+- Bank balance sheets
 - Simple two-column comparison tables
-- Balance sheets or ledger accounts
-- Any tabular data that doesn't require geometric visualization
+- Any tabular data that doesn't require geometric curves/axes
+
+**When to use chart JSON:**
+- Supply and demand curves
+- Cost curves (MC, ATC, AVC)
+- AD-AS models
+- Any visualization with axes, curves, and geometric relationships
 
 ## Response Format
 
@@ -1419,8 +1446,8 @@ export async function sendMessageStream(
                     }
                     continue
                   } else if (textBeforeCodeBlock.length > 0) {
+                    currentTextBlock += textBeforeCodeBlock
                     if (!suppressTextOutput) {
-                      currentTextBlock += textBeforeCodeBlock
                       for (const c of textBeforeCodeBlock) {
                         callbacks.onTextChunk(c)
                       }
@@ -1428,8 +1455,8 @@ export async function sendMessageStream(
                     textBeforeCodeBlock = ''
                   }
                   
+                  currentTextBlock += char
                   if (!suppressTextOutput) {
-                    currentTextBlock += char
                     callbacks.onTextChunk(char)
                   }
                 }
