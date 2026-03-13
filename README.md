@@ -8,10 +8,10 @@
 
 *Your intelligent companion for economic visualization*
 
-[!\[Next.js\](https://img.shields.io/badge/Next.js-16.1.6-black?style=flat-square\&logo=next.js null)](https://nextjs.org/)
-[!\[React\](https://img.shields.io/badge/React-19.2.4-61DAFB?style=flat-square\&logo=react null)](https://reactjs.org/)
-[!\[TypeScript\](https://img.shields.io/badge/TypeScript-5.7.3-3178C6?style=flat-square\&logo=typescript null)](https://www.typescriptlang.org/)
-[!\[License\](https://img.shields.io/badge/License-MIT-green?style=flat-square null)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-16.1.6-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.2.4-61DAFB?style=flat-square&logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
 [🚀 Quick Start](#-quick-start) · [✨ Features](#-features) · [📖 Documentation](#-architecture) · [🤝 Contributing](#-contributing)
 
@@ -153,9 +153,9 @@ npm run dev
 
 | Provider                                                                                     | Endpoint                            | Models            |
 | -------------------------------------------------------------------------------------------- | ----------------------------------- | ----------------- |
-| !\[OpenAI]\(https\://img.shields.io/badge/OpenAI-412991?style=flat-square\&logo=openai null) | `api.openai.com/v1`                 | GPT-4, GPT-4o     |
-| !\[Anthropic]\(https\://img.shields.io/badge/Anthropic-D97757?style=flat-square null)        | `api.anthropic.com/v1`              | Claude 3.5 Sonnet |
-| !\[Google]\(https\://img.shields.io/badge/Google-4285F4?style=flat-square\&logo=google null) | `generativelanguage.googleapis.com` | Gemini Pro        |
+| ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat-square&logo=openai) | `api.openai.com/v1`                 | GPT-4, GPT-4o     |
+| ![Anthropic](https://img.shields.io/badge/Anthropic-D97757?style=flat-square)        | `api.anthropic.com/v1`              | Claude 3.5 Sonnet |
+| ![Google](https://img.shields.io/badge/Google-4285F4?style=flat-square&logo=google) | `generativelanguage.googleapis.com` | Gemini Pro        |
 | Custom                                                                                       | *Any OpenAI-compatible*             | *Varies*          |
 
 ## 🎮 Usage
@@ -274,12 +274,12 @@ EconGrapher/
 
 <div align="center">
 
-[!\[Next.js\](https://img.shields.io/badge/Next.js-16.1.6-000000?style=for-the-badge\&logo=next.js null)](https://nextjs.org/)
-[!\[React\](https://img.shields.io/badge/React-19.2.4-61DAFB?style=for-the-badge\&logo=react null)](https://reactjs.org/)
-[!\[TypeScript\](https://img.shields.io/badge/TypeScript-5.7.3-3178C6?style=for-the-badge\&logo=typescript null)](https://www.typescriptlang.org/)
-[!\[Tailwind CSS\](https://img.shields.io/badge/Tailwind\_CSS-4.2.0-38B2AC?style=for-the-badge\&logo=tailwind-css null)](https://tailwindcss.com/)
-[!\[Plotly.js\](https://img.shields.io/badge/Plotly.js-3.4.0-3F4F75?style=for-the-badge\&logo=plotly null)](https://plotly.com/javascript/)
-[!\[Radix UI\](https://img.shields.io/badge/Radix\_UI-Latest-7C3AED?style=for-the-badge null)](https://www.radix-ui.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.1.6-000000?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.2.4-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![Plotly.js](https://img.shields.io/badge/Plotly.js-3.4.0-3F4F75?style=for-the-badge&logo=plotly)](https://plotly.com/javascript/)
+[![Radix UI](https://img.shields.io/badge/Radix_UI-Latest-7C3AED?style=for-the-badge)](https://www.radix-ui.com/)
 
 </div>
 
