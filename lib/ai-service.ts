@@ -333,6 +333,23 @@ The following is elements the system supports:
 - definition.curve (required): ID of the curve
 - definition.axis (required): "x" for X-intercept, "y" for Y-intercept
 
+#### 8. Point on Curve at Another Point's X Coordinate
+\`\`\`json
+{ "id": "Pm", "definition": { "type": "onCurveAtPointX", "curve": "D", "from": "Em" } }
+\`\`\`
+- definition.type (required): must be "onCurveAtPointX"
+- definition.curve (required): ID of the curve
+- definition.from (required): ID of the source point (uses its X coordinate)
+- **Use Case**: In monopoly graphs, to find the monopoly price point on the demand curve at the monopoly quantity (where MR=MC)
+
+#### 9. Point on Curve at Another Point's Y Coordinate
+\`\`\`json
+{ "id": "P1", "definition": { "type": "onCurveAtPointY", "curve": "S", "from": "E" } }
+\`\`\`
+- definition.type (required): must be "onCurveAtPointY"
+- definition.curve (required): ID of the curve
+- definition.from (required): ID of the source point (uses its Y coordinate)
+
 ## Line Definitions
 
 **Common Parameters (all line types):**
@@ -690,33 +707,81 @@ When you need to compare two markets, scenarios side by side, use the \`charts\`
 \`\`\`
 
 ### Monopoly with Deadweight Loss
+
+**CRITICAL: How to Draw Monopoly Graphs Correctly**
+
+When drawing a monopoly graph, you MUST follow this correct sequence:
+
+1. **Find the monopoly quantity (Qm)**: Where MR = MC (intersection point Em)
+2. **Find the monopoly price (Pm)**: On the DEMAND curve at Qm (NOT at the MR=MC intersection)
+   - Use \`onCurveAtPointX\` with \`from: "Em"\` and \`curve: "D"\`
+3. **Find the competitive equilibrium (Qc)**: Where D = MC (intersection point Ec)
+4. **Draw areas correctly**:
+   - **Consumer Surplus (CS)**: Area below D, above Pm, from Q=0 to Qm
+     - Vertices: D_y_intercept, Pm_on_y_axis, Pm, Qm_on_x_axis (projected from Em)
+   - **Producer Surplus (PS)**: Area above MC, below Pm, from Q=0 to Qm
+     - Vertices: MC_y_intercept (or origin if MC starts at 0), MC_at_Qm, Pm, Pm_on_y_axis
+   - **Deadweight Loss (DWL)**: Triangle between Qm and Qc
+     - Vertices: Pm (on D at Qm), MC_at_Qm (on MC at Qm), Ec (where D=MC)
+
+**Common Mistakes to AVOID:**
+- ❌ Using fixed x value for Pm (e.g., \`"x": 3\`) - This is WRONG because Qm is calculated dynamically
+- ❌ Drawing Pm at the MR=MC intersection - The price is on the DEMAND curve, not at MR=MC
+- ❌ Wrong DWL triangle - Must connect demand curve, MC curve, and competitive equilibrium
+
+**CORRECT Monopoly Example:**
 \`\`\`chart
 {
-  "title": "Monopoly",
+  "title": "Unregulated Monopoly",
   "xLabel": "Quantity",
-  "yLabel": "Price",
+  "yLabel": "Price, Cost",
+  "xRange": [0, 14],
+  "yRange": [0, 14],
   "curves": [
-    { "id": "D", "label": "D", "type": "linear", "slope": -1, "intercept": 10, "color": "#3b82f6" },
+    { "id": "D", "label": "D = AR", "type": "linear", "slope": -1, "intercept": 13, "color": "#3b82f6" },
     { "id": "MR", "label": "MR", "type": "derivedMR", "fromCurve": "D", "color": "#f97316" },
-    { "id": "MC", "label": "MC", "type": "horizontal", "y": 4, "color": "#ef4444" }
+    { "id": "MC", "label": "MC", "type": "linear", "slope": 0.5, "intercept": 2, "color": "#ef4444" }
   ],
   "points": [
-    { "id": "Em", "definition": { "type": "intersection", "curve1": "MR", "curve2": "MC" }, "label": "Em", "showMarker": true },
-    { "id": "Pm", "definition": { "type": "onCurve", "curve": "D", "x": 3 } },
-    { "id": "Ec", "definition": { "type": "intersection", "curve1": "D", "curve2": "MC" }, "label": "Ec", "showMarker": true }
+    { "id": "Em", "definition": { "type": "intersection", "curve1": "MR", "curve2": "MC" }, "label": "M", "showMarker": true },
+    { "id": "Pm", "definition": { "type": "onCurveAtPointX", "curve": "D", "from": "Em" } },
+    { "id": "MC_at_Qm", "definition": { "type": "onCurveAtPointX", "curve": "MC", "from": "Em" } },
+    { "id": "Qm", "definition": { "type": "projectX", "from": "Em" } },
+    { "id": "Pm_y", "definition": { "type": "projectY", "from": "Pm" } },
+    { "id": "Ec", "definition": { "type": "intersection", "curve1": "D", "curve2": "MC" }, "label": "Ec", "showMarker": true },
+    { "id": "Qc", "definition": { "type": "projectX", "from": "Ec" } },
+    { "id": "D_int", "definition": { "type": "curveIntercept", "curve": "D", "axis": "y" } },
+    { "id": "MC_int", "definition": { "type": "curveIntercept", "curve": "MC", "axis": "y" } }
   ],
   "lines": [
     { "definition": { "type": "dashedToAxis", "from": "Em", "xLabel": "Qm", "yLabel": "" } },
-    { "definition": { "type": "dashedToY", "from": "Pm" } }
+    { "definition": { "type": "dashedToY", "from": "Pm", "yLabel": "Pm" } },
+    { "definition": { "type": "dashedToX", "from": "Ec", "xLabel": "Qc" } },
+    { "definition": { "type": "vertical", "from": "Em", "to": "Pm" }, "style": { "color": "#94a3b8", "width": 1.5, "dash": "dash" } }
   ],
   "areas": [
-    { "points": ["Em", "Ec", "Pm"], "color": "rgba(239, 68, 68, 0.3)", "label": "DWL" }
+    { "points": ["D_int", "Pm_y", "Pm", "Qm"], "color": "rgba(59, 130, 246, 0.3)", "label": "CS", "opacity": 0.3 },
+    { "points": ["Pm_y", "MC_int", "MC_at_Qm", "Pm"], "color": "rgba(245, 158, 11, 0.3)", "label": "PS", "opacity": 0.3 },
+    { "points": ["Pm", "MC_at_Qm", "Ec"], "color": "rgba(239, 68, 68, 0.3)", "label": "DWL", "opacity": 0.3 }
   ],
   "axisLabels": [
-    { "point": "Qm", "axis": "x", "label": "Qm" }
+    { "point": "Qm", "axis": "x", "label": "Qm" },
+    { "point": "Qc", "axis": "x", "label": "Qc" },
+    { "point": "Pm_y", "axis": "y", "label": "Pm" }
+  ],
+  "annotations": [
+    { "point": "Em", "text": "MR = MC", "position": "bottomRight", "offset": { "x": 5, "y": -5 } },
+    { "point": "Ec", "text": "Socially Optimal\\nP = MC", "position": "topRight", "offset": { "x": 5, "y": 5 } }
   ]
 }
 \`\`\`
+
+**Key Points Explained:**
+- **Em**: MR = MC intersection → determines monopoly quantity Qm
+- **Pm**: Uses \`onCurveAtPointX\` to find price on demand curve at Qm
+- **MC_at_Qm**: Uses \`onCurveAtPointX\` to find MC at monopoly quantity
+- **Ec**: D = MC intersection → socially optimal (competitive) quantity Qc
+- **Vertical dashed line**: From Em up to Pm shows the price-setting process
 
 ### AD-AS Model
 \`\`\`chart

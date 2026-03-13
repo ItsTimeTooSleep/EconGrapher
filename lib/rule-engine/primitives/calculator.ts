@@ -208,6 +208,44 @@ export class PrimitiveCalculator {
         }
       }
       
+      case 'onCurveAtPointX': {
+        const curve = this.curves.get(definition.curve)
+        if (!curve) {
+          throw new Error(`Curve not found: ${definition.curve}`)
+        }
+        
+        const sourcePoint = this.resolvedPoints.get(definition.from)
+        if (!sourcePoint) {
+          throw new Error(`Point not found: ${definition.from}`)
+        }
+        
+        const y = getYAtX(curve, sourcePoint.coordinates.x)
+        if (y === null) {
+          throw new Error(`Cannot find Y at X=${sourcePoint.coordinates.x} on curve ${definition.curve}`)
+        }
+        
+        return { x: sourcePoint.coordinates.x, y }
+      }
+      
+      case 'onCurveAtPointY': {
+        const curve = this.curves.get(definition.curve)
+        if (!curve) {
+          throw new Error(`Curve not found: ${definition.curve}`)
+        }
+        
+        const sourcePoint = this.resolvedPoints.get(definition.from)
+        if (!sourcePoint) {
+          throw new Error(`Point not found: ${definition.from}`)
+        }
+        
+        const x = getXAtY(curve, sourcePoint.coordinates.y)
+        if (x === null) {
+          throw new Error(`Cannot find X at Y=${sourcePoint.coordinates.y} on curve ${definition.curve}`)
+        }
+        
+        return { x, y: sourcePoint.coordinates.y }
+      }
+      
       default:
         throw new Error(`Unknown point definition type: ${(definition as PointDefinition).type}`)
     }
@@ -226,6 +264,10 @@ export class PrimitiveCalculator {
       const deps: string[] = []
       
       if (point.definition.type === 'projectX' || point.definition.type === 'projectY') {
+        deps.push(point.definition.from)
+      }
+      
+      if (point.definition.type === 'onCurveAtPointX' || point.definition.type === 'onCurveAtPointY') {
         deps.push(point.definition.from)
       }
       

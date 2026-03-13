@@ -108,6 +108,8 @@ export type PointDefinitionType =
   | { type: 'onCurve'; curve: string; x: number }
   | { type: 'onCurveY'; curve: string; y: number }
   | { type: 'curveIntercept'; curve: string; axis: 'x' | 'y' }
+  | { type: 'onCurveAtPointX'; curve: string; from: string }
+  | { type: 'onCurveAtPointY'; curve: string; from: string }
 
 /**
  * 线定义

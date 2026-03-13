@@ -21,6 +21,8 @@ import type { Point } from '../geometry-types'
  * - onCurve: 曲线上某 X 坐标处的点
  * - onCurveY: 曲线上某 Y 坐标处的点
  * - curveIntercept: 曲线的截距点
+ * - onCurveAtPointX: 基于另一个点的 X 坐标在曲线上找点
+ * - onCurveAtPointY: 基于另一个点的 Y 坐标在曲线上找点
  */
 export type PointDefinition =
   | { type: 'fixed'; x: number; y: number }
@@ -30,6 +32,8 @@ export type PointDefinition =
   | { type: 'onCurve'; curve: string; x: number }
   | { type: 'onCurveY'; curve: string; y: number }
   | { type: 'curveIntercept'; curve: string; axis: 'x' | 'y' }
+  | { type: 'onCurveAtPointX'; curve: string; from: string }
+  | { type: 'onCurveAtPointY'; curve: string; from: string }
 
 /**
  * 点原语

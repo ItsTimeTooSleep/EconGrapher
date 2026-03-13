@@ -287,6 +287,8 @@ interface DerivedMFCCurveDefinition {
 | `onCurve`        | 曲线上某 X 处的点 | `curve`, `x`       |
 | `onCurveY`       | 曲线上某 Y 处的点 | `curve`, `y`       |
 | `curveIntercept` | 曲线的截距点     | `curve`, `axis`    |
+| `onCurveAtPointX` | 基于另一个点的 X 坐标在曲线上找点 | `curve`, `from` |
+| `onCurveAtPointY` | 基于另一个点的 Y 坐标在曲线上找点 | `curve`, `from` |
 
 ### 4.2 点定义结构
 
@@ -351,6 +353,32 @@ interface PointDefinition {
 { "id": "yIntercept", "definition": { "type": "curveIntercept", "curve": "D", "axis": "y" } }
 { "id": "xIntercept", "definition": { "type": "curveIntercept", "curve": "D", "axis": "x" } }
 ```
+
+### 4.8 基于另一个点的 X 坐标在曲线上找点
+
+使用另一个点的 X 坐标在指定曲线上找到对应的点。这在垄断图表中特别有用，用于找到垄断价格点。
+
+```json
+{ "id": "Pm", "definition": { "type": "onCurveAtPointX", "curve": "D", "from": "Em" } }
+```
+
+**参数说明：**
+- `curve`: 目标曲线的 ID
+- `from`: 源点的 ID（使用该点的 X 坐标）
+
+**使用场景：** 在垄断图表中，找到需求曲线上对应垄断产量（MR=MC 交点）的价格点。
+
+### 4.9 基于另一个点的 Y 坐标在曲线上找点
+
+使用另一个点的 Y 坐标在指定曲线上找到对应的点。
+
+```json
+{ "id": "P1", "definition": { "type": "onCurveAtPointY", "curve": "S", "from": "E" } }
+```
+
+**参数说明：**
+- `curve`: 目标曲线的 ID
+- `from`: 源点的 ID（使用该点的 Y 坐标）
 
 ***
 
@@ -547,6 +575,8 @@ interface AxisLabelDefinition {
 
 ### 10.2 垄断定价图
 
+**重要说明：** 垄断图表必须正确使用 `onCurveAtPointX` 来找到垄断价格点。
+
 ```json
 {
   "type": "chart",
@@ -554,24 +584,45 @@ interface AxisLabelDefinition {
   "xLabel": "数量",
   "yLabel": "价格",
   "curves": [
-    { "id": "D", "label": "D", "type": "linear", "slope": -1, "intercept": 12 },
-    { "id": "MR", "label": "MR", "type": "derivedMR", "fromCurve": "D" },
-    { "id": "MC", "label": "MC", "type": "linear", "slope": 1, "intercept": 2 }
+    { "id": "D", "label": "D", "type": "linear", "slope": -1, "intercept": 13, "color": "#3b82f6" },
+    { "id": "MR", "label": "MR", "type": "derivedMR", "fromCurve": "D", "color": "#f97316" },
+    { "id": "MC", "label": "MC", "type": "linear", "slope": 0.5, "intercept": 2, "color": "#ef4444" }
   ],
   "points": [
-    { "id": "M", "definition": { "type": "intersection", "curve1": "MR", "curve2": "MC" }, "label": "M" },
-    { "id": "Pm", "definition": { "type": "onCurve", "curve": "D", "x": 5 } },
-    { "id": "E", "definition": { "type": "intersection", "curve1": "D", "curve2": "MC" }, "label": "E" }
+    { "id": "Em", "definition": { "type": "intersection", "curve1": "MR", "curve2": "MC" }, "label": "M", "showMarker": true },
+    { "id": "Pm", "definition": { "type": "onCurveAtPointX", "curve": "D", "from": "Em" } },
+    { "id": "MC_at_Qm", "definition": { "type": "onCurveAtPointX", "curve": "MC", "from": "Em" } },
+    { "id": "Qm", "definition": { "type": "projectX", "from": "Em" } },
+    { "id": "Pm_y", "definition": { "type": "projectY", "from": "Pm" } },
+    { "id": "Ec", "definition": { "type": "intersection", "curve1": "D", "curve2": "MC" }, "label": "Ec", "showMarker": true },
+    { "id": "Qc", "definition": { "type": "projectX", "from": "Ec" } },
+    { "id": "D_int", "definition": { "type": "curveIntercept", "curve": "D", "axis": "y" } },
+    { "id": "MC_int", "definition": { "type": "curveIntercept", "curve": "MC", "axis": "y" } }
   ],
   "lines": [
-    { "definition": { "type": "dashedToAxis", "from": "M" } },
-    { "definition": { "type": "dashedToAxis", "from": "Pm" } }
+    { "definition": { "type": "dashedToAxis", "from": "Em", "xLabel": "Qm", "yLabel": "" } },
+    { "definition": { "type": "dashedToY", "from": "Pm", "yLabel": "Pm" } },
+    { "definition": { "type": "dashedToX", "from": "Ec", "xLabel": "Qc" } },
+    { "definition": { "type": "vertical", "from": "Em", "to": "Pm" }, "style": { "color": "#94a3b8", "width": 1.5, "dash": "dash" } }
   ],
   "areas": [
-    { "points": ["M", "E", "Pm"], "color": "rgba(239, 68, 68, 0.3)", "label": "DWL" }
+    { "points": ["D_int", "Pm_y", "Pm", "Qm"], "color": "rgba(59, 130, 246, 0.3)", "label": "CS" },
+    { "points": ["Pm_y", "MC_int", "MC_at_Qm", "Pm"], "color": "rgba(245, 158, 11, 0.3)", "label": "PS" },
+    { "points": ["Pm", "MC_at_Qm", "Ec"], "color": "rgba(239, 68, 68, 0.3)", "label": "DWL" }
+  ],
+  "axisLabels": [
+    { "point": "Qm", "axis": "x", "label": "Qm" },
+    { "point": "Qc", "axis": "x", "label": "Qc" },
+    { "point": "Pm_y", "axis": "y", "label": "Pm" }
   ]
 }
 ```
+
+**关键点说明：**
+- `Em`: MR = MC 交点，确定垄断产量 Qm
+- `Pm`: 使用 `onCurveAtPointX` 在需求曲线上找到垄断价格
+- `MC_at_Qm`: 使用 `onCurveAtPointX` 在 MC 曲线上找到垄断产量处的边际成本
+- `Ec`: D = MC 交点，社会最优产量 Qc
 
 ### 10.3 成本曲线图
 
