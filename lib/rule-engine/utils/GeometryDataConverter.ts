@@ -221,15 +221,15 @@ export class GeometryDataConverter {
     geometryData.dashedLines.forEach(dashedLine => {
       traces.push(this.convertDashedLine(dashedLine))
       
-      if (dashedLine.axisLabels.x) {
+      if (dashedLine.axisLabels.x && dashedLine.points.length >= 2) {
         annotations.push(this.createAxisLabelAnnotation(
-          dashedLine.points[2].x,
+          dashedLine.points[1].x,
           0,
           dashedLine.axisLabels.x,
           'x'
         ))
       }
-      if (dashedLine.axisLabels.y) {
+      if (dashedLine.axisLabels.y && dashedLine.points.length >= 2) {
         annotations.push(this.createAxisLabelAnnotation(
           0,
           dashedLine.points[0].y,

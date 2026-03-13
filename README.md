@@ -217,7 +217,8 @@ npm run dev
     { "id": "E", "definition": { "type": "intersection", "curve1": "D", "curve2": "S" } }
   ],
   "lines": [
-    { "definition": { "type": "dashedToAxis", "from": "E", "xLabel": "Qe", "yLabel": "Pe" } }
+    { "definition": { "type": "dashedToX", "from": "E", "xLabel": "Qe" } },
+    { "definition": { "type": "dashedToY", "from": "E", "yLabel": "Pe" } }
   ],
   "areas": [
     { "points": ["D_int", "Pe", "E"], "color": "rgba(59, 130, 246, 0.3)", "label": "CS" }

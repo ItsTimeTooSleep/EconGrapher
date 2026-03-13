@@ -80,17 +80,15 @@ export interface ResolvedPoint {
  * 
  * 描述线的定义方式：
  * - segment: 两点之间的线段
- * - dashedToX: 到 X 轴的虚线
- * - dashedToY: 到 Y 轴的虚线
- * - dashedToAxis: 到两个轴的虚线（L 形）
+ * - dashedToX: 到 X 轴的虚线，支持 xLabel
+ * - dashedToY: 到 Y 轴的虚线，支持 yLabel
  * - horizontal: 水平线段
  * - vertical: 垂直线段
  */
 export type LineDefinition =
   | { type: 'segment'; from: string; to: string }
-  | { type: 'dashedToX'; from: string }
-  | { type: 'dashedToY'; from: string }
-  | { type: 'dashedToAxis'; from: string; xLabel?: string; yLabel?: string }
+  | { type: 'dashedToX'; from: string; xLabel?: string }
+  | { type: 'dashedToY'; from: string; yLabel?: string }
   | { type: 'horizontal'; from: string; to: string }
   | { type: 'vertical'; from: string; to: string }
 
@@ -123,8 +121,8 @@ export interface LinePrimitive {
  * 
  * @property points - 线的点集
  * @property style - 线样式
- * @property xLabel - X 轴标签（用于 dashedToAxis）
- * @property yLabel - Y 轴标签（用于 dashedToAxis）
+ * @property xLabel - X 轴标签（用于 dashedToX）
+ * @property yLabel - Y 轴标签（用于 dashedToY）
  */
 export interface ResolvedLine {
   points: Point[]

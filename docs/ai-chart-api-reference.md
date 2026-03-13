@@ -59,7 +59,8 @@ interface ChartData {
     { "id": "E", "definition": { "type": "intersection", "curve1": "D", "curve2": "S" }, "label": "E" }
   ],
   "lines": [
-    { "definition": { "type": "dashedToAxis", "from": "E", "xLabel": "Qe", "yLabel": "Pe" } }
+    { "definition": { "type": "dashedToX", "from": "E", "xLabel": "Qe" } },
+    { "definition": { "type": "dashedToY", "from": "E", "yLabel": "Pe" } }
   ],
   "areas": [
     { "points": ["E", "origin", "xIntercept"], "color": "rgba(59, 130, 246, 0.3)", "label": "消费者剩余" }
@@ -389,9 +390,8 @@ interface PointDefinition {
 | 类型             | 说明           | 参数                         |
 | -------------- | ------------ | -------------------------- |
 | `segment`      | 两点之间的线段      | `from`, `to`               |
-| `dashedToX`    | 到 X 轴的虚线     | `from`                     |
-| `dashedToY`    | 到 Y 轴的虚线     | `from`                     |
-| `dashedToAxis` | 到两个轴的虚线（L 形） | `from`, `xLabel`, `yLabel` |
+| `dashedToX`    | 到 X 轴的虚线     | `from`, `xLabel`           |
+| `dashedToY`    | 到 Y 轴的虚线     | `from`, `yLabel`           |
 | `horizontal`   | 水平线段         | `from`, `to`               |
 | `vertical`     | 垂直线段         | `from`, `to`               |
 
@@ -419,27 +419,17 @@ interface LineDefinition {
 
 ### 5.4 到轴的虚线
 
-```json
-{ "definition": { "type": "dashedToX", "from": "E" } }
-{ "definition": { "type": "dashedToY", "from": "E" } }
-```
-
-### 5.5 L 形虚线（到两个轴）
-
-自动绘制从点到两个坐标轴的虚线，并可添加轴标签。
+从点绘制虚线到坐标轴，支持添加轴标签。
 
 ```json
-{ 
-  "definition": { 
-    "type": "dashedToAxis", 
-    "from": "E", 
-    "xLabel": "Qe", 
-    "yLabel": "Pe" 
-  } 
-}
+{ "definition": { "type": "dashedToX", "from": "E", "xLabel": "Qe" } }
+{ "definition": { "type": "dashedToY", "from": "E", "yLabel": "Pe" } }
 ```
 
-### 5.6 水平/垂直线段
+- `xLabel`（可选）：在 X 轴上显示的标签
+- `yLabel`（可选）：在 Y 轴上显示的标签
+
+### 5.5 水平/垂直线段
 
 ```json
 { "definition": { "type": "horizontal", "from": "P1", "to": "P2" } }
@@ -568,7 +558,8 @@ interface AxisLabelDefinition {
     { "id": "Ey", "definition": { "type": "projectY", "from": "E" } }
   ],
   "lines": [
-    { "definition": { "type": "dashedToAxis", "from": "E", "xLabel": "Qe", "yLabel": "Pe" } }
+    { "definition": { "type": "dashedToX", "from": "E", "xLabel": "Qe" } },
+    { "definition": { "type": "dashedToY", "from": "E", "yLabel": "Pe" } }
   ]
 }
 ```
@@ -600,7 +591,7 @@ interface AxisLabelDefinition {
     { "id": "MC_int", "definition": { "type": "curveIntercept", "curve": "MC", "axis": "y" } }
   ],
   "lines": [
-    { "definition": { "type": "dashedToAxis", "from": "Em", "xLabel": "Qm", "yLabel": "" } },
+    { "definition": { "type": "dashedToX", "from": "Em", "xLabel": "Qm" } },
     { "definition": { "type": "dashedToY", "from": "Pm", "yLabel": "Pm" } },
     { "definition": { "type": "dashedToX", "from": "Ec", "xLabel": "Qc" } },
     { "definition": { "type": "vertical", "from": "Em", "to": "Pm" }, "style": { "color": "#94a3b8", "width": 1.5, "dash": "dash" } }
@@ -678,7 +669,8 @@ interface AxisLabelDefinition {
     { "id": "E", "definition": { "type": "intersection", "curve1": "AD", "curve2": "SRAS" }, "label": "E" }
   ],
   "lines": [
-    { "definition": { "type": "dashedToAxis", "from": "E", "xLabel": "Y", "yLabel": "P" } }
+    { "definition": { "type": "dashedToX", "from": "E", "xLabel": "Y" } },
+    { "definition": { "type": "dashedToY", "from": "E", "yLabel": "P" } }
   ]
 }
 ```

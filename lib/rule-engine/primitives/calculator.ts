@@ -354,6 +354,7 @@ export class PrimitiveCalculator {
           from.coordinates,
           { x: from.coordinates.x, y: 0 }
         )
+        xLabel = line.definition.xLabel
         break
       }
       
@@ -367,21 +368,6 @@ export class PrimitiveCalculator {
           { x: 0, y: from.coordinates.y },
           from.coordinates
         )
-        break
-      }
-      
-      case 'dashedToAxis': {
-        const from = this.resolvedPoints.get(line.definition.from)
-        if (!from) {
-          throw new Error(`Point not found: ${line.definition.from}`)
-        }
-        
-        points.push(
-          { x: 0, y: from.coordinates.y },
-          from.coordinates,
-          { x: from.coordinates.x, y: 0 }
-        )
-        xLabel = line.definition.xLabel
         yLabel = line.definition.yLabel
         break
       }

@@ -129,9 +129,8 @@ export interface LineDefinition {
  */
 export type LineDefinitionType =
   | { type: 'segment'; from: string; to: string }
-  | { type: 'dashedToX'; from: string }
-  | { type: 'dashedToY'; from: string }
-  | { type: 'dashedToAxis'; from: string; xLabel?: string; yLabel?: string }
+  | { type: 'dashedToX'; from: string; xLabel?: string }
+  | { type: 'dashedToY'; from: string; yLabel?: string }
   | { type: 'horizontal'; from: string; to: string }
   | { type: 'vertical'; from: string; to: string }
 

@@ -360,30 +360,23 @@ The following is elements the system supports:
   - width (optional): line width in pixels
   - dash (optional): "solid" | "dash" | "dot" (default: "dash" for dashed lines)
 
-#### 1. Dashed Lines to Both Axes (L-shaped)
+#### 1. Dashed Line to X-axis
 \`\`\`json
-{ "definition": { "type": "dashedToAxis", "from": "E", "xLabel": "Qe", "yLabel": "Pe" } }
-\`\`\`
-- definition.type (required): must be "dashedToAxis"
-- definition.from (required): ID of the source point
-- definition.xLabel (optional): label to display on X-axis
-- definition.yLabel (optional): label to display on Y-axis
-
-#### 2. Dashed Line to X-axis Only
-\`\`\`json
-{ "definition": { "type": "dashedToX", "from": "E" } }
+{ "definition": { "type": "dashedToX", "from": "E", "xLabel": "Qe" } }
 \`\`\`
 - definition.type (required): must be "dashedToX"
 - definition.from (required): ID of the source point
+- definition.xLabel (optional): label to display on X-axis
 
-#### 3. Dashed Line to Y-axis Only
+#### 2. Dashed Line to Y-axis
 \`\`\`json
-{ "definition": { "type": "dashedToY", "from": "E" } }
+{ "definition": { "type": "dashedToY", "from": "E", "yLabel": "Pe" } }
 \`\`\`
 - definition.type (required): must be "dashedToY"
 - definition.from (required): ID of the source point
+- definition.yLabel (optional): label to display on Y-axis
 
-### 4. Segment Between Two Points
+### 3. Segment Between Two Points
 \`\`\`json
 { "definition": { "type": "segment", "from": "A", "to": "B" } }
 \`\`\`
@@ -391,7 +384,7 @@ The following is elements the system supports:
 - definition.from (required): ID of the starting point
 - definition.to (required): ID of the ending point
 
-#### 5. Horizontal Line Segment
+#### 4. Horizontal Line Segment
 \`\`\`json
 { "definition": { "type": "horizontal", "from": "A", "to": "B" } }
 \`\`\`
@@ -399,7 +392,7 @@ The following is elements the system supports:
 - definition.from (required): ID of the first point
 - definition.to (required): ID of the second point
 
-#### 6. Vertical Line Segment
+#### 5. Vertical Line Segment
 \`\`\`json
 { "definition": { "type": "vertical", "from": "A", "to": "B" } }
 \`\`\`
@@ -425,6 +418,27 @@ Areas are defined by listing point IDs in order (clockwise or counter-clockwise)
 - color (optional): fill color (hex or rgba format)
 - opacity (optional): transparency 0-1 (default: 0.3)
 - label (optional): area label for legend
+
+**CRITICAL: Area Definition Rules**
+
+1. **Point Order Matters**: Points must be listed in clockwise OR counter-clockwise order to form a proper polygon.
+   - WRONG: \`["A", "C", "B"]\` if A, B, C are not in order → creates self-intersecting polygon
+   - CORRECT: \`["A", "B", "C"]\` or \`["A", "C", "B"]\` depending on geometric arrangement
+
+2. **Triangle Areas**: For triangular areas, use exactly 3 points that form the triangle vertices.
+   - Consumer Surplus example: \`["D_int", "Pe", "E"]\` - triangle with vertices at demand intercept, price on y-axis, and equilibrium
+
+3. **Quadrilateral Areas**: For four-sided areas, ensure points trace the boundary without crossing.
+   - Example: \`["MC_int", "MC_at_Qm", "Pm", "Pm_y"]\` - traces: y-axis → right → up → left → back to start
+
+4. **DO NOT Include Axis Projection Points Unnecessarily**:
+   - For CS above a price line: Use \`["D_int", "Pm_y", "Pm"]\` NOT \`["D_int", "Pm_y", "Pm", "Qm"]\`
+   - The Qm point (on x-axis) would incorrectly extend the polygon to the axis
+
+5. **Visualize Before Defining**: Before writing the points array, visualize the polygon:
+   - What shape should this area be? (triangle, quadrilateral, etc.)
+   - Which points are the actual vertices of this shape?
+   - Are the points in proper order around the boundary?
 
 ## Axis Label Definitions
 
@@ -586,7 +600,8 @@ Draw arrows between points or curve positions. Useful for showing shifts, moveme
     { "id": "E", "definition": { "type": "intersection", "curve1": "D", "curve2": "S" }, "label": "E", "showMarker": true }
   ],
   "lines": [
-    { "definition": { "type": "dashedToAxis", "from": "E", "xLabel": "Qe", "yLabel": "Pe" } }
+    { "definition": { "type": "dashedToX", "from": "E", "xLabel": "Qe" } },
+    { "definition": { "type": "dashedToY", "from": "E", "yLabel": "Pe" } }
   ],
   "areas": [
     {
@@ -693,7 +708,8 @@ When you need to compare two markets, scenarios side by side, use the \`charts\`
     { "id": "S_int", "definition": { "type": "curveIntercept", "curve": "S", "axis": "y" } }
   ],
   "lines": [
-    { "definition": { "type": "dashedToAxis", "from": "E", "xLabel": "Qe", "yLabel": "Pe" } }
+    { "definition": { "type": "dashedToX", "from": "E", "xLabel": "Qe" } },
+    { "definition": { "type": "dashedToY", "from": "E", "yLabel": "Pe" } }
   ],
   "areas": [
     { "points": ["D_int", "Pe", "E"], "color": "rgba(59, 130, 246, 0.3)", "label": "CS" },
@@ -718,16 +734,22 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
 3. **Find the competitive equilibrium (Qc)**: Where D = MC (intersection point Ec)
 4. **Draw areas correctly**:
    - **Consumer Surplus (CS)**: Area below D, above Pm, from Q=0 to Qm
-     - Vertices: D_y_intercept, Pm_on_y_axis, Pm, Qm_on_x_axis (projected from Em)
+     - This is a TRIANGLE with vertices: D_y_intercept, Pm_on_y_axis, Pm
+     - **DO NOT include Qm** (x-axis point) - this would create a wrong polygon!
+     - Correct: \`["D_int", "Pm_y", "Pm"]\` - forms triangle above price line
    - **Producer Surplus (PS)**: Area above MC, below Pm, from Q=0 to Qm
-     - Vertices: MC_y_intercept (or origin if MC starts at 0), MC_at_Qm, Pm, Pm_on_y_axis
+     - This is a QUADRILATERAL with vertices in clockwise order
+     - Correct: \`["MC_int", "MC_at_Qm", "Pm", "Pm_y"]\` - starts from MC intercept, goes right, then up, then left
    - **Deadweight Loss (DWL)**: Triangle between Qm and Qc
      - Vertices: Pm (on D at Qm), MC_at_Qm (on MC at Qm), Ec (where D=MC)
+     - Correct: \`["Pm", "MC_at_Qm", "Ec"]\` - forms triangle in the gap
 
 **Common Mistakes to AVOID:**
 - ❌ Using fixed x value for Pm (e.g., \`"x": 3\`) - This is WRONG because Qm is calculated dynamically
 - ❌ Drawing Pm at the MR=MC intersection - The price is on the DEMAND curve, not at MR=MC
 - ❌ Wrong DWL triangle - Must connect demand curve, MC curve, and competitive equilibrium
+- ❌ **CS including Qm point** - This creates a quadrilateral extending to x-axis, NOT the actual consumer surplus!
+- ❌ **PS with wrong point order** - Points must be in clockwise/counter-clockwise order to avoid self-intersecting polygons
 
 **CORRECT Monopoly Example:**
 \`\`\`chart
@@ -754,14 +776,14 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
     { "id": "MC_int", "definition": { "type": "curveIntercept", "curve": "MC", "axis": "y" } }
   ],
   "lines": [
-    { "definition": { "type": "dashedToAxis", "from": "Em", "xLabel": "Qm", "yLabel": "" } },
+    { "definition": { "type": "dashedToX", "from": "Em", "xLabel": "Qm" } },
     { "definition": { "type": "dashedToY", "from": "Pm", "yLabel": "Pm" } },
     { "definition": { "type": "dashedToX", "from": "Ec", "xLabel": "Qc" } },
     { "definition": { "type": "vertical", "from": "Em", "to": "Pm" }, "style": { "color": "#94a3b8", "width": 1.5, "dash": "dash" } }
   ],
   "areas": [
-    { "points": ["D_int", "Pm_y", "Pm", "Qm"], "color": "rgba(59, 130, 246, 0.3)", "label": "CS", "opacity": 0.3 },
-    { "points": ["Pm_y", "MC_int", "MC_at_Qm", "Pm"], "color": "rgba(245, 158, 11, 0.3)", "label": "PS", "opacity": 0.3 },
+    { "points": ["D_int", "Pm_y", "Pm"], "color": "rgba(59, 130, 246, 0.3)", "label": "CS", "opacity": 0.3 },
+    { "points": ["MC_int", "MC_at_Qm", "Pm", "Pm_y"], "color": "rgba(245, 158, 11, 0.3)", "label": "PS", "opacity": 0.3 },
     { "points": ["Pm", "MC_at_Qm", "Ec"], "color": "rgba(239, 68, 68, 0.3)", "label": "DWL", "opacity": 0.3 }
   ],
   "axisLabels": [
@@ -783,6 +805,19 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
 - **Ec**: D = MC intersection → socially optimal (competitive) quantity Qc
 - **Vertical dashed line**: From Em up to Pm shows the price-setting process
 
+**Area Definitions Explained:**
+- **CS = ["D_int", "Pm_y", "Pm"]**: Triangle with vertices at (0, D_intercept), (0, Pm), (Qm, Pm)
+  - This is the area BELOW demand curve and ABOVE price line Pm
+  - DO NOT add Qm point - that would extend the polygon to x-axis incorrectly!
+- **PS = ["MC_int", "MC_at_Qm", "Pm", "Pm_y"]**: Quadrilateral in clockwise order
+  - Starts at MC intercept (0, MC_intercept)
+  - Goes right to MC_at_Qm (Qm, MC_at_Qm)
+  - Goes up to Pm (Qm, Pm)
+  - Goes left to Pm_y (0, Pm)
+  - This is the area ABOVE MC curve and BELOW price line Pm
+- **DWL = ["Pm", "MC_at_Qm", "Ec"]**: Triangle showing lost surplus
+  - Between monopoly quantity Qm and competitive quantity Qc
+
 ### AD-AS Model
 \`\`\`chart
 {
@@ -800,7 +835,8 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
     { "id": "P", "definition": { "type": "projectY", "from": "E" } }
   ],
   "lines": [
-    { "definition": { "type": "dashedToAxis", "from": "E", "xLabel": "Y", "yLabel": "P" } }
+    { "definition": { "type": "dashedToX", "from": "E", "xLabel": "Y" } },
+    { "definition": { "type": "dashedToY", "from": "E", "yLabel": "P" } }
   ],
   "axisLabels": [
     { "point": "Y", "axis": "x", "label": "Y" },
@@ -897,7 +933,8 @@ Note: AFC is a hyperbola (y = FC/Q), continuously decreasing as quantity increas
         { "id": "E", "definition": { "type": "intersection", "curve1": "D", "curve2": "MC" }, "showMarker": true }
       ],
       "lines": [
-        { "definition": { "type": "dashedToAxis", "from": "E", "xLabel": "Qc", "yLabel": "Pc" } }
+        { "definition": { "type": "dashedToX", "from": "E", "xLabel": "Qc" } },
+        { "definition": { "type": "dashedToY", "from": "E", "yLabel": "Pc" } }
       ]
     },
     {
@@ -914,7 +951,7 @@ Note: AFC is a hyperbola (y = FC/Q), continuously decreasing as quantity increas
         { "id": "Pm", "definition": { "type": "onCurve", "curve": "D", "x": 4 } }
       ],
       "lines": [
-        { "definition": { "type": "dashedToAxis", "from": "Em", "xLabel": "Qm" } },
+        { "definition": { "type": "dashedToX", "from": "Em", "xLabel": "Qm" } },
         { "definition": { "type": "dashedToY", "from": "Pm" } }
       ]
     }
@@ -953,7 +990,8 @@ Note: AFC is a hyperbola (y = FC/Q), continuously decreasing as quantity increas
         { "id": "S_int", "definition": { "type": "curveIntercept", "curve": "S", "axis": "y" } }
       ],
       "lines": [
-        { "definition": { "type": "dashedToAxis", "from": "E", "xLabel": "Q*", "yLabel": "P*" } }
+        { "definition": { "type": "dashedToX", "from": "E", "xLabel": "Q*" } },
+        { "definition": { "type": "dashedToY", "from": "E", "yLabel": "P*" } }
       ],
       "areas": [
         { "points": ["D_int", "Pe", "E"], "color": "rgba(59, 130, 246, 0.3)", "label": "CS" },
@@ -981,7 +1019,7 @@ Note: AFC is a hyperbola (y = FC/Q), continuously decreasing as quantity increas
         { "id": "ATC_at_Q", "definition": { "type": "onCurve", "curve": "ATC", "x": 6 } }
       ],
       "lines": [
-        { "definition": { "type": "dashedToAxis", "from": "E_firm", "xLabel": "q*", "yLabel": "" } }
+        { "definition": { "type": "dashedToX", "from": "E_firm", "xLabel": "q*" } }
       ],
       "axisLabels": [
         { "point": "Q_firm", "axis": "x", "label": "q*" }
