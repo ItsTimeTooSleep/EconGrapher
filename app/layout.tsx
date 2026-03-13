@@ -23,6 +23,33 @@ export const metadata: Metadata = {
     ],
     apple: '/apple-icon.png',
   },
+
+  // Open Graph / Facebook / Teams / LinkedIn
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://econgrapher.pages.dev',
+    siteName: 'EconGrapher',
+    title: 'EconGrapher — AI Economics Assistant',
+    description: 'AI economics assistant for AP Micro & Macroeconomics. Ask questions, explore concepts, and generate interactive graphs through natural language.',
+    images: [
+      {
+        url: 'https://econgrapher.pages.dev/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'EconGrapher - AI-Powered Economics Chart Generator',
+      },
+    ],
+  },
+
+  // Twitter / X
+  twitter: {
+    card: 'summary_large_image',
+    title: 'EconGrapher — AI Economics Assistant',
+    description: 'AI economics assistant for AP Micro & Macroeconomics. Ask questions, explore concepts, and generate interactive graphs through natural language.',
+    images: ['https://econgrapher.pages.dev/og-image.png'],
+    creator: '@ItsTimeTooSleep',
+  },
 }
 
 export default function RootLayout({
