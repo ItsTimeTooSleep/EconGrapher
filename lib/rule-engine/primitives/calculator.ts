@@ -246,6 +246,42 @@ export class PrimitiveCalculator {
         return { x, y: sourcePoint.coordinates.y }
       }
       
+      case 'curveMinimum': {
+        const curve = this.curves.get(definition.curve)
+        if (!curve) {
+          throw new Error(`Curve not found: ${definition.curve}`)
+        }
+        
+        if (!curve.equation?.quadratic) {
+          throw new Error(`Curve ${definition.curve} does not have a quadratic equation (required for minimum point)`)
+        }
+        
+        const q = curve.equation.quadratic
+        if (q.a <= 0) {
+          throw new Error(`Curve ${definition.curve} is not a U-shape (a must be positive for minimum)`)
+        }
+        
+        return { x: q.h, y: q.k }
+      }
+      
+      case 'curveMaximum': {
+        const curve = this.curves.get(definition.curve)
+        if (!curve) {
+          throw new Error(`Curve not found: ${definition.curve}`)
+        }
+        
+        if (!curve.equation?.quadratic) {
+          throw new Error(`Curve ${definition.curve} does not have a quadratic equation (required for maximum point)`)
+        }
+        
+        const q = curve.equation.quadratic
+        if (q.a >= 0) {
+          throw new Error(`Curve ${definition.curve} is not an N-shape (a must be negative for maximum)`)
+        }
+        
+        return { x: q.h, y: q.k }
+      }
+      
       default:
         throw new Error(`Unknown point definition type: ${(definition as PointDefinition).type}`)
     }

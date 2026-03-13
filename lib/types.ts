@@ -115,6 +115,8 @@ export type PointDefinitionType =
   | { type: 'curveIntercept'; curve: string; axis: 'x' | 'y' }
   | { type: 'onCurveAtPointX'; curve: string; from: string }
   | { type: 'onCurveAtPointY'; curve: string; from: string }
+  | { type: 'curveMinimum'; curve: string }
+  | { type: 'curveMaximum'; curve: string }
 
 /**
  * 线定义

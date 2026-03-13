@@ -350,6 +350,39 @@ The following is elements the system supports:
 - definition.curve (required): ID of the curve
 - definition.from (required): ID of the source point (uses its Y coordinate)
 
+#### 10. Curve Minimum Point
+\`\`\`json
+{ "id": "ATC_min", "definition": { "type": "curveMinimum", "curve": "ATC" } }
+\`\`\`
+- definition.type (required): must be "curveMinimum"
+- definition.curve (required): ID of the U-shape curve
+- **Use Case**: Get the minimum point of a U-shape curve (ATC, AVC, MC). The point is automatically calculated from the curve's definition.
+- **IMPORTANT**: Only works with U-shape curves (type: "uShape")
+
+#### 11. Curve Maximum Point
+\`\`\`json
+{ "id": "MP_max", "definition": { "type": "curveMaximum", "curve": "MP" } }
+\`\`\`
+- definition.type (required): must be "curveMaximum"
+- definition.curve (required): ID of the N-shape curve
+- **Use Case**: Get the maximum point of an N-shape (inverted U) curve. The point is automatically calculated from the curve's definition.
+- **IMPORTANT**: Only works with N-shape curves (type: "nShape")
+
+**BEST PRACTICE: Use Geometric Definitions Instead of Fixed Coordinates**
+
+When defining points, ALWAYS prefer geometric definitions over fixed coordinates:
+
+| Use This | Instead of This | Why |
+|----------|-----------------|-----|
+| \`{ "type": "intersection", "curve1": "MC", "curve2": "ATC" }\` | \`{ "type": "fixed", "x": 6, "y": 8 }\` | Accurate intersection point |
+| \`{ "type": "curveMinimum", "curve": "ATC" }\` | \`{ "type": "fixed", "x": 6, "y": 8 }\` | Exact minimum from curve definition |
+| \`{ "type": "projectX", "from": "E" }\` | \`{ "type": "fixed", "x": 6, "y": 0 }\` | Consistent with source point |
+
+**Benefits of geometric definitions:**
+1. **Accuracy**: Points are mathematically derived from curve definitions
+2. **Consistency**: If you change curve parameters, points update automatically
+3. **Clarity**: The chart intent is clear from the definition
+
 ## Line Definitions
 
 **Common Parameters (all line types):**
@@ -854,20 +887,54 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
 - At quantities below ATC minimum: MC < ATC (MC curve is below ATC)
 - At quantities above ATC minimum: MC > ATC (MC curve is above ATC)
 
-**Example:**
+**CRITICAL: Use Geometric Point Definitions for Cost Curves**
+- Use \`curveMinimum\` to define minimum points of MC, ATC, AVC
+- Use \`intersection\` to define where MC intersects ATC and AVC
+- Use \`projectX\` and \`projectY\` to create axis projection points
+- Add dashed lines to axes for key points (minimum points, intersections)
+
+**Example with proper geometric definitions:**
 \`\`\`chart
 {
   "title": "Firm Cost Curves",
   "xLabel": "Quantity",
-  "yLabel": "Cost",
+  "yLabel": "Cost ($)",
+  "xRange": [0, 12],
+  "yRange": [0, 20],
   "curves": [
     { "id": "MC", "label": "MC", "type": "uShape", "minimum": { "x": 4, "y": 5 }, "leftIntercept": 15, "color": "#ef4444" },
     { "id": "ATC", "label": "ATC", "type": "uShape", "minimum": { "x": 6, "y": 8 }, "leftIntercept": 25, "color": "#10b981" },
     { "id": "AVC", "label": "AVC", "type": "uShape", "minimum": { "x": 5, "y": 6 }, "leftIntercept": 12, "color": "#6366f1" }
+  ],
+  "points": [
+    { "id": "MC_min", "definition": { "type": "curveMinimum", "curve": "MC" } },
+    { "id": "AVC_min", "definition": { "type": "curveMinimum", "curve": "AVC" } },
+    { "id": "ATC_min", "definition": { "type": "curveMinimum", "curve": "ATC" } },
+    { "id": "MC_ATC_int", "definition": { "type": "intersection", "curve1": "MC", "curve2": "ATC" }, "showMarker": true },
+    { "id": "MC_AVC_int", "definition": { "type": "intersection", "curve1": "MC", "curve2": "AVC" }, "showMarker": true },
+    { "id": "Q1", "definition": { "type": "projectX", "from": "MC_min" } },
+    { "id": "Q2", "definition": { "type": "projectX", "from": "AVC_min" } },
+    { "id": "Q3", "definition": { "type": "projectX", "from": "ATC_min" } }
+  ],
+  "lines": [
+    { "definition": { "type": "dashedToX", "from": "MC_min" } },
+    { "definition": { "type": "dashedToX", "from": "AVC_min" } },
+    { "definition": { "type": "dashedToX", "from": "ATC_min" } }
+  ],
+  "axisLabels": [
+    { "point": "Q1", "axis": "x", "label": "Q₁" },
+    { "point": "Q2", "axis": "x", "label": "Q₂" },
+    { "point": "Q3", "axis": "x", "label": "Q₃" }
   ]
 }
 \`\`\`
-Note: MC minimum at x=4, ATC minimum at x=6 - MC reaches minimum first, then intersects ATC at its minimum.
+
+**Key Points Explained:**
+- **MC_min, AVC_min, ATC_min**: Defined using \`curveMinimum\` - automatically derived from curve definitions
+- **MC_ATC_int, MC_AVC_int**: Defined using \`intersection\` - MC intersects ATC and AVC at their minimums
+- **Q1, Q2, Q3**: Projections to X-axis for axis labels
+- **Dashed lines**: Extend from minimum points to X-axis for visual clarity
+- **No text annotations on chart**: Explanations go in the text response, not on the chart
 
 **Example with AFC (Average Fixed Cost):**
 \`\`\`chart
@@ -879,7 +946,13 @@ Note: MC minimum at x=4, ATC minimum at x=6 - MC reaches minimum first, then int
     { "id": "MC", "label": "MC", "type": "uShape", "minimum": { "x": 4, "y": 5 }, "leftIntercept": 15, "color": "#ef4444" },
     { "id": "ATC", "label": "ATC", "type": "uShape", "minimum": { "x": 6, "y": 8 }, "leftIntercept": 25, "color": "#10b981" },
     { "id": "AVC", "label": "AVC", "type": "uShape", "minimum": { "x": 5, "y": 6 }, "leftIntercept": 12, "color": "#6366f1" },
-    { "id": "AFC", "label": "AFC", "type": "hyperbola", "k": 50, "color": "#8b5cf6" }
+    { "id": "AFC", "label": "AFC", "type": "hyperbola", "k": 50, "color": "#8b5cf6", "dashed": true }
+  ],
+  "points": [
+    { "id": "ATC_min", "definition": { "type": "curveMinimum", "curve": "ATC" } },
+    { "id": "AVC_min", "definition": { "type": "curveMinimum", "curve": "AVC" } },
+    { "id": "MC_ATC_int", "definition": { "type": "intersection", "curve1": "MC", "curve2": "ATC" }, "showMarker": true },
+    { "id": "MC_AVC_int", "definition": { "type": "intersection", "curve1": "MC", "curve2": "AVC" }, "showMarker": true }
   ]
 }
 \`\`\`
@@ -1034,12 +1107,36 @@ Note: AFC is a hyperbola (y = FC/Q), continuously decreasing as quantity increas
 
 ## Best Practices
 
-1. **Point Visibility**: Points are invisible by default (showMarker: false). Only set showMarker: true for key points that need visual markers.
+1. **Point Visibility**: Points are invisible by default (showMarker: false). Only set showMarker: true for key points that need visual markers (like equilibrium points, intersections).
+
 2. **Axis Labels**: For labels on axes (like Qe, Pe, Y, P), use axisLabels configuration, not showMarker on points.
-3. **ID Naming**: Use uppercase for curves (D, S, MR, MC), meaningful names for points (E for equilibrium, M for monopoly)
-4. **Colors**: Use preset colors for consistency, semi-transparent (opacity 0.3) for areas
-5. **Axis Range**: Default [0, 12] for both axes, adjust to fit all elements
-6. **Definition Order**: Define curves first, then points that depend on curves, then projections
+
+3. **ID Naming**: Use uppercase for curves (D, S, MR, MC), meaningful names for points (E for equilibrium, M for monopoly).
+
+4. **Colors**: Use preset colors for consistency, semi-transparent (opacity 0.3) for areas.
+
+5. **Axis Range**: Default [0, 12] for both axes, adjust to fit all elements.
+
+6. **Dashed Lines to Axes**: ALWAYS add dashed lines from important points to both axes:
+   - Use \`dashedToX\` to extend a point to the X-axis
+   - Use \`dashedToY\` to extend a point to the Y-axis
+   - This helps readers identify the exact coordinates of key points
+   - Example: For equilibrium point E, add both \`dashedToX\` and \`dashedToY\`
+
+7. **Minimal Annotations on Chart**: Keep the chart clean and readable:
+   - DO NOT put long explanations in annotation text (e.g., "MC minimum\n(occurs first)")
+   - DO put simple labels (e.g., "E", "M", "min ATC")
+   - Put detailed explanations in your text response, NOT on the chart
+   - Use axisLabels for coordinate values (Qe, Pe, Q₁, Q₂, etc.)
+
+8. **Geometric Point Definitions**: ALWAYS use geometric definitions instead of fixed coordinates:
+   - Use \`intersection\` for curve intersections
+   - Use \`curveMinimum\` for U-shape curve minimums
+   - Use \`curveMaximum\` for N-shape curve maximums
+   - Use \`projectX\` and \`projectY\` for axis projections
+   - This ensures accuracy and consistency
+
+9. **Definition Order**: Define curves first, then points that depend on curves, then projections.
 
 ## Other Charts
 ### T-table (T-account / Balance Sheet)

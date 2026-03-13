@@ -290,6 +290,8 @@ interface DerivedMFCCurveDefinition {
 | `curveIntercept` | 曲线的截距点     | `curve`, `axis`    |
 | `onCurveAtPointX` | 基于另一个点的 X 坐标在曲线上找点 | `curve`, `from` |
 | `onCurveAtPointY` | 基于另一个点的 Y 坐标在曲线上找点 | `curve`, `from` |
+| `curveMinimum`   | U 形曲线的最低点  | `curve`            |
+| `curveMaximum`   | N 形曲线的最高点  | `curve`            |
 
 ### 4.2 点定义结构
 
@@ -380,6 +382,51 @@ interface PointDefinition {
 **参数说明：**
 - `curve`: 目标曲线的 ID
 - `from`: 源点的 ID（使用该点的 Y 坐标）
+
+### 4.10 曲线最低点 (curveMinimum)
+
+自动获取 U 形曲线（ATC、AVC、MC 等）的最低点坐标。点的坐标从曲线定义的 `minimum` 参数自动计算。
+
+```json
+{ "id": "ATC_min", "definition": { "type": "curveMinimum", "curve": "ATC" } }
+```
+
+**参数说明：**
+- `curve`: U 形曲线的 ID（必须是 `type: "uShape"` 的曲线）
+
+**使用场景：** 
+- 获取成本曲线的最低点
+- MC 与 ATC/AVC 的交点（MC 在 ATC/AVC 最低点处相交）
+
+**示例：**
+```json
+{
+  "curves": [
+    { "id": "MC", "label": "MC", "type": "uShape", "minimum": { "x": 4, "y": 5 }, "leftIntercept": 15 },
+    { "id": "ATC", "label": "ATC", "type": "uShape", "minimum": { "x": 6, "y": 8 }, "leftIntercept": 25 }
+  ],
+  "points": [
+    { "id": "MC_min", "definition": { "type": "curveMinimum", "curve": "MC" } },
+    { "id": "ATC_min", "definition": { "type": "curveMinimum", "curve": "ATC" } },
+    { "id": "MC_ATC_int", "definition": { "type": "intersection", "curve1": "MC", "curve2": "ATC" }, "showMarker": true }
+  ]
+}
+```
+
+### 4.11 曲线最高点 (curveMaximum)
+
+自动获取 N 形曲线（倒 U 形）的最高点坐标。点的坐标从曲线定义的 `maximum` 参数自动计算。
+
+```json
+{ "id": "MP_max", "definition": { "type": "curveMaximum", "curve": "MP" } }
+```
+
+**参数说明：**
+- `curve`: N 形曲线的 ID（必须是 `type: "nShape"` 的曲线）
+
+**使用场景：**
+- 获取边际产量（MP）曲线的最高点
+- 获取总产量曲线的拐点
 
 ***
 
@@ -617,12 +664,16 @@ interface AxisLabelDefinition {
 
 ### 10.3 成本曲线图
 
+**重要说明：** 成本曲线应使用几何定义来定义关键点，确保准确性。
+
 ```json
 {
   "type": "chart",
   "title": "厂商成本曲线",
   "xLabel": "产量",
-  "yLabel": "成本",
+  "yLabel": "成本 ($)",
+  "xRange": [0, 12],
+  "yRange": [0, 20],
   "curves": [
     { 
       "id": "MC", 
@@ -648,9 +699,35 @@ interface AxisLabelDefinition {
       "leftIntercept": 12,
       "color": "#6366f1"
     }
+  ],
+  "points": [
+    { "id": "MC_min", "definition": { "type": "curveMinimum", "curve": "MC" } },
+    { "id": "AVC_min", "definition": { "type": "curveMinimum", "curve": "AVC" } },
+    { "id": "ATC_min", "definition": { "type": "curveMinimum", "curve": "ATC" } },
+    { "id": "MC_ATC_int", "definition": { "type": "intersection", "curve1": "MC", "curve2": "ATC" }, "showMarker": true },
+    { "id": "MC_AVC_int", "definition": { "type": "intersection", "curve1": "MC", "curve2": "AVC" }, "showMarker": true },
+    { "id": "Q1", "definition": { "type": "projectX", "from": "MC_min" } },
+    { "id": "Q2", "definition": { "type": "projectX", "from": "AVC_min" } },
+    { "id": "Q3", "definition": { "type": "projectX", "from": "ATC_min" } }
+  ],
+  "lines": [
+    { "definition": { "type": "dashedToX", "from": "MC_min" } },
+    { "definition": { "type": "dashedToX", "from": "AVC_min" } },
+    { "definition": { "type": "dashedToX", "from": "ATC_min" } }
+  ],
+  "axisLabels": [
+    { "point": "Q1", "axis": "x", "label": "Q₁" },
+    { "point": "Q2", "axis": "x", "label": "Q₂" },
+    { "point": "Q3", "axis": "x", "label": "Q₃" }
   ]
 }
 ```
+
+**关键点说明：**
+- `MC_min`, `AVC_min`, `ATC_min`: 使用 `curveMinimum` 自动获取曲线最低点
+- `MC_ATC_int`, `MC_AVC_int`: MC 在 ATC 和 AVC 最低点处与它们相交
+- `Q₁`, `Q₂`, `Q₃`: 各最低点在 X 轴上的投影，用于轴标签
+- 虚线从最低点延伸到 X 轴，便于读取产量值
 
 ### 10.4 AD-AS 模型
 
@@ -702,6 +779,50 @@ interface AxisLabelDefinition {
 - 先定义曲线
 - 再定义基于曲线的点（交点、曲线上的点）
 - 最后定义投影点
+
+### 11.5 几何定义优先
+
+**始终使用几何定义而非固定坐标**，确保图表的准确性和一致性：
+
+| 使用 | 而非 | 原因 |
+|------|------|------|
+| `{ "type": "intersection", "curve1": "MC", "curve2": "ATC" }` | `{ "type": "fixed", "x": 6, "y": 8 }` | 精确的交点坐标 |
+| `{ "type": "curveMinimum", "curve": "ATC" }` | `{ "type": "fixed", "x": 6, "y": 8 }` | 从曲线定义自动计算 |
+| `{ "type": "projectX", "from": "E" }` | `{ "type": "fixed", "x": 6, "y": 0 }` | 与源点保持一致 |
+
+**优点：**
+1. **准确性**：点坐标从曲线数学定义自动计算
+2. **一致性**：修改曲线参数时，点自动更新
+3. **清晰性**：图表意图从定义中清晰可见
+
+### 11.6 坐标轴虚线
+
+**为关键点添加到坐标轴的虚线**，帮助读者识别坐标值：
+
+```json
+{
+  "lines": [
+    { "definition": { "type": "dashedToX", "from": "E", "xLabel": "Qe" } },
+    { "definition": { "type": "dashedToY", "from": "E", "yLabel": "Pe" } }
+  ]
+}
+```
+
+**适用场景：**
+- 均衡点到两个轴
+- 最低/最高点到 X 轴
+- 垄断价格点到 Y 轴
+
+### 11.7 最小化图表标注
+
+保持图表简洁，避免过多文字：
+
+| 做法 | 示例 |
+|------|------|
+| ✅ 使用简短标签 | `"text": "E"` 或 `"text": "min ATC"` |
+| ❌ 避免长解释 | `"text": "MC minimum\n(occurs first)"` |
+| ✅ 详细说明放文本 | 在响应文本中解释图表含义 |
+| ✅ 坐标值用 axisLabels | `{ "point": "Qe", "axis": "x", "label": "Qe" }` |
 
 ***
 

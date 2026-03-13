@@ -23,6 +23,8 @@ import type { Point } from '../geometry-types'
  * - curveIntercept: 曲线的截距点
  * - onCurveAtPointX: 基于另一个点的 X 坐标在曲线上找点
  * - onCurveAtPointY: 基于另一个点的 Y 坐标在曲线上找点
+ * - curveMinimum: 曲线的最低点（适用于 U-shape 曲线）
+ * - curveMaximum: 曲线的最高点（适用于 N-shape 曲线）
  */
 export type PointDefinition =
   | { type: 'fixed'; x: number; y: number }
@@ -34,6 +36,8 @@ export type PointDefinition =
   | { type: 'curveIntercept'; curve: string; axis: 'x' | 'y' }
   | { type: 'onCurveAtPointX'; curve: string; from: string }
   | { type: 'onCurveAtPointY'; curve: string; from: string }
+  | { type: 'curveMinimum'; curve: string }
+  | { type: 'curveMaximum'; curve: string }
 
 /**
  * 点原语
