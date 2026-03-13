@@ -1234,6 +1234,40 @@ export async function sendMessageStream(
   }
   saveRawRequest(rawRequest)
 
+  // 在 try 块外部声明变量，以便在 catch 块中访问
+  let textContent = ''
+  let thinkingContent = ''
+  const streamChunks: string[] = []
+  const contentBlocks: ContentBlock[] = []
+  let currentTextBlock = ''
+  let currentThinkingBlock = ''
+  let hasThinkingBlock = false
+  
+  const flushTextBlock = () => {
+    if (currentTextBlock.trim()) {
+      const textBlock: ContentBlock = { type: 'text', content: currentTextBlock.trim() }
+      contentBlocks.push(textBlock)
+      currentTextBlock = ''
+      if (callbacks.onContentBlockAdded) {
+        callbacks.onContentBlockAdded(textBlock, [...contentBlocks])
+      }
+    }
+  }
+  
+  const flushThinkingBlock = () => {
+    if (currentThinkingBlock.trim()) {
+      const thinkingBlock: ContentBlock = { 
+        type: 'thinking', 
+        thinking: { content: currentThinkingBlock.trim(), isStreaming: false } 
+      }
+      contentBlocks.push(thinkingBlock)
+      currentThinkingBlock = ''
+      if (callbacks.onContentBlockAdded) {
+        callbacks.onContentBlockAdded(thinkingBlock, [...contentBlocks])
+      }
+    }
+  }
+
   try {
     const res = await fetch(url, {
       method: 'POST',
@@ -1277,44 +1311,12 @@ export async function sendMessageStream(
 
     const decoder = new TextDecoder()
     let buffer = ''
-    let textContent = ''
-    let thinkingContent = ''
-    const streamChunks: string[] = []
-    const contentBlocks: ContentBlock[] = []
     let loadingMarkerDetected = false
     let suppressTextOutput = false
     
     let inCodeBlock = false
     let codeBlockContent = ''
     let textBeforeCodeBlock = ''
-    let currentTextBlock = ''
-    let currentThinkingBlock = ''
-    let hasThinkingBlock = false
-    
-    const flushTextBlock = () => {
-      if (currentTextBlock.trim()) {
-        const textBlock: ContentBlock = { type: 'text', content: currentTextBlock.trim() }
-        contentBlocks.push(textBlock)
-        currentTextBlock = ''
-        if (callbacks.onContentBlockAdded) {
-          callbacks.onContentBlockAdded(textBlock, [...contentBlocks])
-        }
-      }
-    }
-    
-    const flushThinkingBlock = () => {
-      if (currentThinkingBlock.trim()) {
-        const thinkingBlock: ContentBlock = { 
-          type: 'thinking', 
-          thinking: { content: currentThinkingBlock.trim(), isStreaming: false } 
-        }
-        contentBlocks.push(thinkingBlock)
-        currentThinkingBlock = ''
-        if (callbacks.onContentBlockAdded) {
-          callbacks.onContentBlockAdded(thinkingBlock, [...contentBlocks])
-        }
-      }
-    }
     
     while (true) {
       const { done, value } = await reader.read()

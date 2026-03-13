@@ -119,7 +119,7 @@ export default function ChatInput({ onSend, onStop, disabled, isLoading, placeho
             </button>
           ))}
           <div className="px-4 py-2 text-xs text-muted-foreground border-t border-border bg-muted/30">
-            按 <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">Tab</kbd> 或 <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">Enter</kbd> 选择 · <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">Esc</kbd> 关闭
+            Press <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">Tab</kbd> OR <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">Enter</kbd> to select · <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">Esc</kbd> to close
           </div>
         </div>
       )}

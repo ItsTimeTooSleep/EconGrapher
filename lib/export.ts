@@ -366,13 +366,13 @@ export function parseSlashCommand(text: string): string | null {
 export const SUPPORTED_COMMANDS = [
   {
     command: '/export',
-    description: '导出当前聊天记录为 Markdown 格式',
+    description: 'Export the current chat history as Markdown format',
     usage: '/export [format]',
     examples: ['/export', '/export json', '/export markdown']
   },
   {
     command: '/debug',
-    description: '导出原始 HTTP 请求和响应数据（用于调试）',
+    description: 'Export raw HTTP requests and responses (for debugging)',
     usage: '/debug [sessionId]',
     examples: ['/debug', '/debug all']
   }
