@@ -33,23 +33,6 @@
 
 EconGrapher is an intelligent economics visualization tool designed for **AP Micro & Macro Economics**. Simply describe what you need in plain language, and watch as professional, interactive charts materialize before your eyes.
 
-<div align="center">
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│   "Draw a supply and demand curve showing consumer surplus" │
-│                           ↓                                 │
-│              ┌─────────────────────────┐                    │
-│              │   📈 Interactive Chart  │                    │
-│              │   with CS/PS shading    │                    │
-│              └─────────────────────────┘                    │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
-
-</div>
-
 ## ✨ Features
 
 <table>

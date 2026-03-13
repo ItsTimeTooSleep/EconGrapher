@@ -58,8 +58,12 @@ Desktop.ini
 # Logs
 logs/
 *.log
+log.txt
 
 # Temporary files
 *.tmp
 *.temp
 .cache/
+
+# Trae IDE
+.trae/
