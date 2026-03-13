@@ -1,0 +1,224 @@
+[Vercel Web Analytics] Debug mode is enabled by default in development. No requests will be sent to the server.
+script.debug.js:1 [Vercel Web Analytics] Running queued event pageview {route: '/', path: '/'}
+script.debug.js:1 [Vercel Web Analytics] [view] http://localhost:3000/ {o: 'http://localhost:3000/', sv: '0.1.3', sdkn: '@vercel/analytics/next', sdkv: '1.6.1', ts: 1773281623375, …} /_vercel/insights/view
+logger.ts:156 ℹ️ [AI Logger] [REQUEST] Starting new AI request 
+📦 Data: {sessionId: null, requestId: '1773281682533-mzzu5zuq8'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [HISTORY] Message history context 
+📦 Data: {messageCount: 2, roles: Array(2), contentPreviews: Array(2)}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 ℹ️ [AI Logger] [API_REQUEST] Sending API request 
+📦 Data: {endpoint: 'https://api.deepseek.com/v1', model: 'deepseek-chat', messageCount: 2, userContentLength: 34, userContentPreview: '请你帮我做一个测试：输出一段文本，接着生成一个图表，然后生成一个文本'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 ℹ️ [AI Logger] [STREAM] Started streaming response    
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #10 
+📦 Data: {contentLength: 2, contentPreview: '解释'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #20 
+📦 Data: {contentLength: 2, contentPreview: '模型'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #30 
+📦 Data: {contentLength: 2, contentPreview: '核心'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #40 
+📦 Data: {contentLength: 2, contentPreview: '价格'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #50 
+📦 Data: {contentLength: 2, contentPreview: '供给'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #60 
+📦 Data: {contentLength: 1, contentPreview: '，'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #70 
+📦 Data: {contentLength: 2, contentPreview: '向上'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #80 
+📦 Data: {contentLength: 1, contentPreview: '。'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #90 
+📦 Data: {contentLength: 2, contentPreview: '数量'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #100 
+📦 Data: {contentLength: 2, contentPreview: '需求'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #110 
+📦 Data: {contentLength: 2, contentPreview: 'ON'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 ℹ️ [AI Logger] [CHART_LOADING] Detected chart loading marker, triggering animation and suppressing text output    
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+page.tsx:165 [DEBUG] onToolCallDetected
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #120 
+📦 Data: {contentLength: 4, contentPreview: 'supp'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #130 
+📦 Data: {contentLength: 2, contentPreview: ' "'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #140 
+📦 Data: {contentLength: 1, contentPreview: ' '}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #150 
+📦 Data: {contentLength: 1, contentPreview: ' '}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #160 
+📦 Data: {contentLength: 1, contentPreview: ' '}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #170 
+📦 Data: {contentLength: 2, contentPreview: ' "'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #180 
+📦 Data: {contentLength: 3, contentPreview: 'ope'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #190 
+📦 Data: {contentLength: 2, contentPreview: '":'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #200 
+📦 Data: {contentLength: 1, contentPreview: 'B'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #210 
+📦 Data: {contentLength: 2, contentPreview: 'ly'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #220 
+📦 Data: {contentLength: 2, contentPreview: ' "'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #230 
+📦 Data: {contentLength: 1, contentPreview: '1'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #240 
+📦 Data: {contentLength: 5, contentPreview: 'color'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #250 
+📦 Data: {contentLength: 4, contentPreview: ' ],\n'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #260 
+📦 Data: {contentLength: 2, contentPreview: ' "'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #270 
+📦 Data: {contentLength: 1, contentPreview: '，'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #280 
+📦 Data: {contentLength: 1, contentPreview: 'S'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #290 
+📦 Data: {contentLength: 1, contentPreview: '（'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #300 
+📦 Data: {contentLength: 1, contentPreview: '，'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #310 
+📦 Data: {contentLength: 2, contentPreview: '需求'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #320 
+📦 Data: {contentLength: 3, contentPreview: '代表了'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #330 
+📦 Data: {contentLength: 2, contentPreview: '曲线'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #340 
+📦 Data: {contentLength: 3, contentPreview: '生产者'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #350 
+📦 Data: {contentLength: 2, contentPreview: '结尾'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #360 
+📦 Data: {contentLength: 2, contentPreview: '系统'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #370 
+📦 Data: {contentLength: 3, contentPreview: '我们的'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 🔍 [AI Logger] [STREAM] Received chunk #380 
+📦 Data: {contentLength: 3, contentPreview: '可视化'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 ℹ️ [AI Logger] [STREAM] Stream completed 
+📦 Data: {totalChunks: 386, totalContentLength: 785, duration: 12756} 
+⏱️ Duration: 12756ms 
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 ℹ️ [AI Logger] [TOOL_CALL] Executing tool: generate_supply_demand_chart 
+📦 Data: {toolName: 'generate_supply_demand_chart', argsPreview: '{"title":"测试图表：基础供给与需求模型","xLabel":"数量 (Q)","yLabe…4ECDC4"}],"showEquilibrium":true,"showCSPS":true}'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+ai-service.ts:1289 [DEBUG] parseFunctionArgs - args: {
+  "title": "测试图表：基础供给与需求模型",
+  "xLabel": "数量 (Q)",
+  "yLabel": "价格 (P)",
+  "demandCurves": [
+    {
+      "label": "需求 (D)",
+      "slope": -1.5,
+      "intercept": 15,
+      "color": "#FF6B6B"
+    }
+  ],
+  "supplyCurves": [
+    {
+      "label": "供给 (S)",
+      "slope": 1,
+      "intercept": 3,
+      "color": "#4ECDC4"
+    }
+  ],
+  "showEquilibrium": true,
+  "showCSPS": true
+}
+logger.ts:156 ℹ️ [AI Logger] [CHART] Chart generated successfully 
+📦 Data: {chartType: 'supply_demand', chartTitle: '测试图表：基础供给与需求模型'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 ℹ️ [AI Logger] [TOOL_CALL] Tool generate_supply_demand_chart completed 
+📦 Data: {toolName: 'generate_supply_demand_chart', success: true, resultType: 'object'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 ℹ️ [AI Logger] [CHART] Chart generated successfully 
+📦 Data: {chartType: 'supply_demand', chartTitle: '测试图表：基础供给与需求模型'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 ℹ️ [AI Logger] [CONTENT_BLOCKS] Built content blocks from text 
+📦 Data: {blockCount: 3, blocks: Array(3)}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 ℹ️ [AI Logger] [RESPONSE] Stream text response received 
+📦 Data: {contentLength: 766, contentPreview: '好的，我们来做一个测试。首先，我将解释一个基础的经济学概念：供给与需求模型。\n\n供给与需求模型是微观… "intercept": 3, "color": "#4ECDC4" }\n  ],\n  "...'}  
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+logger.ts:156 ℹ️ [AI Logger] [REQUEST] Request completed 
+📦 Data: {duration: 12787} 
+⏱️ Duration: 12787ms 
+🔗 Request ID: 1773281682533-mzzu5zuq8 
+index.ts:189 [DEBUG] chartDataToSemanticConfig - showConsumerSurplus: undefined
+index.ts:190 [DEBUG] chartDataToSemanticConfig - showProducerSurplus: undefined
+index.ts:191 [DEBUG] chartDataToSemanticConfig - display.welfare: {consumerSurplus: {…}, producerSurplus: {…}, deadweightLoss: {…}}
+SupplyDemandRules.ts:50 [DEBUG] SupplyDemandRules - config.display: {
+  "equilibrium": {
+    "show": true,
+    "showDashedLines": true,
+    "showAxisLabels": true
+  },
+  "welfare": {
+    "consumerSurplus": {
+      "show": false
+    },
+    "producerSurplus": {
+      "show": false
+    },
+    "deadweightLoss": {
+      "show": false,
+      "label": "DWL"
+    }
+  },
+  "priceControl": {
+    "shortageStyle": "brace",
+    "surplusStyle": "fill",
+    "showShortageLabel": true,
+    "showSurplusLabel": true
+  },
+  "annotations": {
+    "showCurveLabels": true,
+    "showPointLabels": true
+  }
+}
+SupplyDemandRules.ts:51 [DEBUG] SupplyDemandRules - merged display.welfare: {
+  "consumerSurplus": {
+    "show": false
+  },
+  "producerSurplus": {
+    "show": false
+  },
+  "deadweightLoss": {
+    "show": false,
+    "label": "DWL"
+  }
+}

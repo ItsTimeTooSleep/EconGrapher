@@ -1,0 +1,406 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* ═══════════════════════════════════════════════════════════════
+   * "Ivory & Indigo" - Refined Light Theme
+   * A sophisticated light theme with warm ivory backgrounds and 
+   * deep indigo accents for professional economics visualization
+   * ═══════════════════════════════════════════════════════════════ */
+  
+  /* ─── Background & Foreground ─── */
+  --background: oklch(0.985 0.006 85);
+  --foreground: oklch(0.18 0.02 250);
+  
+  /* ─── Card & Container ─── */
+  --card: oklch(0.99 0.003 250);
+  --card-foreground: oklch(0.18 0.02 250);
+  --popover: oklch(0.99 0.003 250);
+  --popover-foreground: oklch(0.18 0.02 250);
+  
+  /* ─── Primary: Deep Indigo ─── */
+  --primary: oklch(0.42 0.18 260);
+  --primary-foreground: oklch(0.99 0 0);
+  
+  /* ─── Secondary: Soft Blue-Gray ─── */
+  --secondary: oklch(0.95 0.015 250);
+  --secondary-foreground: oklch(0.30 0.03 250);
+  
+  /* ─── Muted: Subtle Gray ─── */
+  --muted: oklch(0.96 0.008 250);
+  --muted-foreground: oklch(0.48 0.02 250);
+  
+  /* ─── Accent: Warm Amber ─── */
+  --accent: oklch(0.94 0.04 85);
+  --accent-foreground: oklch(0.25 0.03 75);
+  
+  /* ─── Destructive: Refined Red ─── */
+  --destructive: oklch(0.55 0.20 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  
+  /* ─── Border & Input ─── */
+  --border: oklch(0.90 0.015 250);
+  --input: oklch(0.96 0.008 250);
+  --ring: oklch(0.42 0.18 260);
+  
+  /* ─── Chart Colors: Professional Palette ─── */
+  --chart-1: oklch(0.42 0.18 260);
+  --chart-2: oklch(0.72 0.15 75);
+  --chart-3: oklch(0.60 0.18 25);
+  --chart-4: oklch(0.55 0.14 160);
+  --chart-5: oklch(0.50 0.18 300);
+  
+  /* ─── Radius ─── */
+  --radius: 0.625rem;
+  
+  /* ─── Sidebar: Light Elevation ─── */
+  --sidebar: oklch(0.975 0.005 85);
+  --sidebar-foreground: oklch(0.18 0.02 250);
+  --sidebar-primary: oklch(0.42 0.18 260);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.94 0.03 85);
+  --sidebar-accent-foreground: oklch(0.25 0.03 75);
+  --sidebar-border: oklch(0.90 0.015 250);
+  --sidebar-ring: oklch(0.42 0.18 260);
+  
+  /* ─── Custom Component Tokens ─── */
+  --message-user-bg: oklch(0.94 0.04 260);
+  --message-ai-bg: oklch(0.97 0.01 250);
+  --chart-panel-bg: oklch(0.99 0.003 250);
+  --analysis-card-bg: oklch(0.96 0.03 260);
+  --analysis-card-border: oklch(0.85 0.06 260);
+}
+
+@theme inline {
+  --font-sans: 'Geist', 'Geist Fallback';
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  --color-message-user-bg: var(--message-user-bg);
+  --color-message-ai-bg: var(--message-ai-bg);
+  --color-chart-panel-bg: var(--chart-panel-bg);
+  --color-analysis-card-bg: var(--analysis-card-bg);
+  --color-analysis-card-border: var(--analysis-card-border);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.example-btn {
+  @apply text-left text-xs text-foreground/80 bg-card border border-border rounded-lg px-3 py-2.5 leading-relaxed cursor-pointer transition-all duration-200;
+}
+
+.example-btn:hover {
+  border-color: oklch(0.42 0.18 260 / 0.6);
+  background-color: oklch(0.42 0.18 260 / 0.08);
+  box-shadow: 0 4px 12px oklch(0.42 0.18 260 / 0.15);
+  transform: translateY(-2px);
+}
+
+.example-btn:active {
+  transform: translateY(0);
+}
+
+.message-action-btn {
+  @apply p-1.5 rounded-lg text-muted-foreground cursor-pointer transition-all duration-200;
+}
+
+.message-action-btn:hover {
+  @apply text-primary bg-primary/10 scale-110;
+}
+
+.message-action-btn:hover svg {
+  transform: var(--icon-rotate, rotate(0deg));
+}
+
+.message-action-btn.edit-btn:hover svg {
+  transform: rotate(12deg);
+}
+
+.message-action-btn.retry-btn:hover svg {
+  transform: rotate(-45deg);
+}
+
+.markdown-content {
+  line-height: 1.6;
+}
+
+.markdown-content > *:first-child {
+  margin-top: 0;
+}
+
+.markdown-content > *:last-child {
+  margin-bottom: 0;
+}
+
+.hljs {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-built_in,
+.hljs-name,
+.hljs-tag {
+  color: oklch(0.55 0.18 260);
+}
+
+.hljs-string,
+.hljs-title,
+.hljs-section,
+.hljs-attribute,
+.hljs-literal,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type {
+  color: oklch(0.55 0.15 75);
+}
+
+.hljs-comment,
+.hljs-deletion {
+  color: oklch(0.50 0.02 250);
+  font-style: italic;
+}
+
+.hljs-number,
+.hljs-regexp,
+.hljs-addition {
+  color: oklch(0.55 0.18 25);
+}
+
+.hljs-function {
+  color: oklch(0.50 0.14 160);
+}
+
+.hljs-variable,
+.hljs-params {
+  color: oklch(0.50 0.18 300);
+}
+
+@keyframes cursor-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.streaming-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1.2em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background-color: #000;
+  animation: cursor-blink 1s steps(1) infinite;
+}
+
+.dark .streaming-cursor {
+  background-color: #fff;
+}
+
+.markdown-content.is-streaming > :nth-last-child(2) {
+  display: inline;
+  margin-bottom: 0;
+}
+
+.markdown-content.is-streaming > p:nth-last-child(2) {
+  display: inline;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Thinking Block Styles
+ * Elegant collapsible thinking process visualization
+ * ═══════════════════════════════════════════════════════════════ */
+
+.thinking-block-wrapper {
+  @apply w-full rounded-xl overflow-hidden border border-primary/20 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent;
+}
+
+.thinking-block-header {
+  @apply w-full flex items-center justify-between px-4 py-3 cursor-pointer transition-all duration-200 hover:bg-primary/5;
+}
+
+.thinking-icon-wrapper {
+  @apply relative flex items-center justify-center w-7 h-7 rounded-lg bg-primary/10;
+}
+
+.thinking-dots {
+  @apply flex items-center gap-1 ml-2;
+}
+
+.thinking-dot {
+  @apply w-1.5 h-1.5 rounded-full bg-primary;
+  animation: thinking-pulse 2s ease-in-out infinite;
+}
+
+@keyframes thinking-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.thinking-block-content {
+  @apply overflow-hidden transition-all duration-300 ease-out;
+}
+
+.thinking-block-collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+.thinking-block-expanded {
+  max-height: 2000px;
+  opacity: 1;
+}
+
+.thinking-content-inner {
+  @apply px-4 pb-4;
+}
+
+.thinking-text {
+  @apply text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap font-mono;
+  background: linear-gradient(
+    90deg,
+    oklch(0.48 0.02 250) 0%,
+    oklch(0.48 0.02 250) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.thinking-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  background-color: oklch(0.42 0.18 260);
+  animation: thinking-cursor-blink 1s steps(1) infinite;
+}
+
+@keyframes thinking-cursor-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.dark .thinking-block-wrapper {
+  @apply border-primary/30;
+  background: linear-gradient(
+    135deg,
+    oklch(0.20 0.03 260 / 0.3) 0%,
+    oklch(0.18 0.02 250 / 0.2) 50%,
+    transparent 100%
+  );
+}
+
+.dark .thinking-text {
+  background: linear-gradient(
+    90deg,
+    oklch(0.65 0.02 250) 0%,
+    oklch(0.65 0.02 250) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.dark .thinking-cursor {
+  background-color: oklch(0.65 0.15 260);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Slow Loading Animations
+ * Relaxed animations for graph loading preview
+ * ═══════════════════════════════════════════════════════════════ */
+
+@keyframes slow-bounce {
+  0%, 100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes slow-ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes slow-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-slow-bounce {
+  animation: slow-bounce 1.5s infinite;
+}
+
+.animate-slow-ping {
+  animation: slow-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-slow-pulse {
+  animation: slow-pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

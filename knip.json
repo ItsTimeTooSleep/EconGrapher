@@ -1,0 +1,27 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "ignore": [],
+  "ignoreDependencies": [
+    "tailwindcss",
+    "tw-animate-css",
+    "@next/eslint-plugin-next"
+  ],
+  "ignoreExportsUsedInFile": true,
+  "ignoreFiles": [],
+  "includeEntryExports": false,
+  "workspaces": {
+    ".": {
+      "entry": [
+        "app/**/*.{ts,tsx}",
+        "eslint.config.mjs",
+        "postcss.config.mjs"
+      ],
+      "project": [
+        "app/**/*.{ts,tsx}",
+        "components/**/*.{ts,tsx}",
+        "hooks/**/*.{ts,tsx}",
+        "lib/**/*.{ts,tsx}"
+      ]
+    }
+  }
+}
