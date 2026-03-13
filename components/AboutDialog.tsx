@@ -71,15 +71,15 @@ export function AboutDialog({ open, onOpenChange }: AboutDialogProps) {
                         </h1>
                         <div className="flex items-center gap-1.5 mt-0.5">
                           <Sparkles className="w-3 h-3 text-chart-2" />
-                          <span className="text-xs font-medium text-chart-2">AI-Powered Visualization</span>
+                          <span className="text-xs font-medium text-chart-2">AI Economics Assistant</span>
                           <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-chart-2/20 text-chart-2 font-semibold ml-1">24+ Graphs</span>
                         </div>
                       </div>
                     </div>
                     
                     <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
-                      Transform natural language into stunning economic visualizations. 
-                      Powered by advanced AI to interpret, analyze, and render complex data into interactive charts.
+                      Your intelligent companion for economics learning and visualization. 
+                      Ask questions, explore concepts, and generate interactive graphs through natural language.
                     </p>
                   </div>
                 </div>

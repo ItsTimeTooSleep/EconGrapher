@@ -48,8 +48,7 @@ function WelcomeScreen({ onPreset, onOpenSettings, hasApiKey }: {
       </div>
       <h1 className="text-2xl font-bold text-foreground text-balance mb-2">EconGrapher</h1>
       <p className="text-sm text-muted-foreground max-w-sm leading-relaxed text-pretty mb-6">
-        Generate professional AP Economics charts through natural language. 
-        Ask about supply &amp; demand, AD-AS, cost curves, monetary policy, and more.
+        Your AI companion for AP Economics. Ask questions, explore concepts, and generate interactive graphs for micro & macro topics.
       </p>
 
       {!hasApiKey && (

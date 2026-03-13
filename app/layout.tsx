@@ -1,14 +1,10 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
-  title: 'EconGrapher — AP Economics Graph Generator',
-  description: 'AI-powered economics graph generator for AP Micro & Macroeconomics. Generate supply-demand, AD-AS, cost curves and more through natural language.',
+  title: 'EconGrapher — AI Economics Assistant',
+  description: 'AI economics assistant for AP Micro & Macroeconomics. Ask questions, explore concepts, and generate interactive graphs through natural language.',
 
   icons: {
     icon: [
@@ -36,6 +32,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link 
+          href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" 
+          rel="stylesheet" 
+        />
+      </head>
       <body className="font-sans antialiased">
         {children}
         <Analytics />

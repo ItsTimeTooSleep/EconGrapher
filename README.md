@@ -2,20 +2,20 @@
 
 <img src="public/icon.svg" alt="EconGrapher Logo" width="120" height="120">
 
-# 📊 EconGrapher
+# EconGrapher
 
-**AI-Powered Economics Chart Generator**
+**Graphing AI Economics Assistant**
 
-*Transform natural language into professional economic diagrams*
+*Your intelligent companion for economic visualization*
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.1.6-black?style=flat-square&logo=next.js)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19.2.4-61DAFB?style=flat-square&logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+[!\[Next.js\](https://img.shields.io/badge/Next.js-16.1.6-black?style=flat-square\&logo=next.js null)](https://nextjs.org/)
+[!\[React\](https://img.shields.io/badge/React-19.2.4-61DAFB?style=flat-square\&logo=react null)](https://reactjs.org/)
+[!\[TypeScript\](https://img.shields.io/badge/TypeScript-5.7.3-3178C6?style=flat-square\&logo=typescript null)](https://www.typescriptlang.org/)
+[!\[License\](https://img.shields.io/badge/License-MIT-green?style=flat-square null)](LICENSE)
 
 [🚀 Quick Start](#-quick-start) · [✨ Features](#-features) · [📖 Documentation](#-architecture) · [🤝 Contributing](#-contributing)
 
----
+***
 
 </div>
 
@@ -25,13 +25,13 @@
 
 <img src="assets/screenshot.png" alt="EconGrapher Screenshot" width="100%">
 
-*Real-time AI-powered chart generation with interactive economics diagrams*
+*Interactive economics graphs with AI-powered assistance*
 
 </div>
 
 ## 🎯 Overview
 
-EconGrapher is an intelligent economics visualization tool designed for **AP Micro & Macro Economics**. Simply describe what you need in plain language, and watch as professional, interactive charts materialize before your eyes.
+EconGrapher is an AI economics assistant designed for **AP Micro & Macro Economics**. Ask questions, explore concepts, and generate interactive graphs through natural language conversations.
 
 ## ✨ Features
 
@@ -39,7 +39,8 @@ EconGrapher is an intelligent economics visualization tool designed for **AP Mic
 <tr>
 <td width="50%">
 
-### 🤖 AI-Powered Generation
+### 🤖 AI Generation
+
 - Natural language input
 - Real-time streaming responses
 - Thinking process visibility
@@ -49,6 +50,7 @@ EconGrapher is an intelligent economics visualization tool designed for **AP Mic
 <td width="50%">
 
 ### 📐 Geometric Primitives
+
 - Semantic chart definitions
 - Auto-calculated coordinates
 - Intersection detection
@@ -60,6 +62,7 @@ EconGrapher is an intelligent economics visualization tool designed for **AP Mic
 <td width="50%">
 
 ### 📊 Interactive Charts
+
 - Zoom & pan capabilities
 - Export to multiple formats
 - Responsive design
@@ -69,6 +72,7 @@ EconGrapher is an intelligent economics visualization tool designed for **AP Mic
 <td width="50%">
 
 ### 💾 Session Management
+
 - Local conversation storage
 - Multiple sessions support
 - Chat history preservation
@@ -83,29 +87,29 @@ EconGrapher is an intelligent economics visualization tool designed for **AP Mic
 <details>
 <summary><b>🔬 Microeconomics</b></summary>
 
-| Chart Type | Description |
-|------------|-------------|
-| Supply & Demand | Market equilibrium analysis |
-| Consumer/Producer Surplus | Welfare analysis |
-| Price Controls | Ceilings and floors |
-| Elasticity | Price, income, cross elasticity |
-| Cost Curves | MC, ATC, AVC, AFC |
-| Market Structures | Perfect competition, monopoly |
-| Factor Markets | Labor, capital markets |
+| Chart Type                | Description                     |
+| ------------------------- | ------------------------------- |
+| Supply & Demand           | Market equilibrium analysis     |
+| Consumer/Producer Surplus | Welfare analysis                |
+| Price Controls            | Ceilings and floors             |
+| Elasticity                | Price, income, cross elasticity |
+| Cost Curves               | MC, ATC, AVC, AFC               |
+| Market Structures         | Perfect competition, monopoly   |
+| Factor Markets            | Labor, capital markets          |
 
 </details>
 
 <details>
 <summary><b>🌍 Macroeconomics</b></summary>
 
-| Chart Type | Description |
-|------------|-------------|
-| AD-AS Model | Aggregate demand & supply |
-| Phillips Curve | Inflation-unemployment |
-| Money Market | Supply & demand for money |
-| Loanable Funds | Investment & savings |
-| Forex Market | Exchange rate dynamics |
-| PPC | Production possibilities |
+| Chart Type     | Description               |
+| -------------- | ------------------------- |
+| AD-AS Model    | Aggregate demand & supply |
+| Phillips Curve | Inflation-unemployment    |
+| Money Market   | Supply & demand for money |
+| Loanable Funds | Investment & savings      |
+| Forex Market   | Exchange rate dynamics    |
+| PPC            | Production possibilities  |
 
 </details>
 
@@ -136,23 +140,23 @@ npm run dev
 
 <div align="center">
 
-| Step | Action |
-|:----:|--------|
-| 1️⃣ | Open the application in your browser |
-| 2️⃣ | Click **"Set API Key"** in the header |
-| 3️⃣ | Enter your API key and select provider |
-| 4️⃣ | Start chatting with your AI assistant |
+| Step | Action                                 |
+| :--: | -------------------------------------- |
+|  1️⃣ | Open the application in your browser   |
+|  2️⃣ | Click **"Set API Key"** in the header  |
+|  3️⃣ | Enter your API key and select provider |
+|  4️⃣ | Start chatting with your AI assistant  |
 
 </div>
 
 ### Supported AI Providers
 
-| Provider | Endpoint | Models |
-|----------|----------|--------|
-| ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat-square&logo=openai) | `api.openai.com/v1` | GPT-4, GPT-4o |
-| ![Anthropic](https://img.shields.io/badge/Anthropic-D97757?style=flat-square) | `api.anthropic.com/v1` | Claude 3.5 Sonnet |
-| ![Google](https://img.shields.io/badge/Google-4285F4?style=flat-square&logo=google) | `generativelanguage.googleapis.com` | Gemini Pro |
-| Custom | *Any OpenAI-compatible* | *Varies* |
+| Provider                                                                                     | Endpoint                            | Models            |
+| -------------------------------------------------------------------------------------------- | ----------------------------------- | ----------------- |
+| !\[OpenAI]\(https\://img.shields.io/badge/OpenAI-412991?style=flat-square\&logo=openai null) | `api.openai.com/v1`                 | GPT-4, GPT-4o     |
+| !\[Anthropic]\(https\://img.shields.io/badge/Anthropic-D97757?style=flat-square null)        | `api.anthropic.com/v1`              | Claude 3.5 Sonnet |
+| !\[Google]\(https\://img.shields.io/badge/Google-4285F4?style=flat-square\&logo=google null) | `generativelanguage.googleapis.com` | Gemini Pro        |
+| Custom                                                                                       | *Any OpenAI-compatible*             | *Varies*          |
 
 ## 🎮 Usage
 
@@ -259,23 +263,23 @@ EconGrapher/
 
 ### Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run start` | Start production server |
-| `npm run lint` | Run ESLint |
+| Command         | Description              |
+| --------------- | ------------------------ |
+| `npm run dev`   | Start development server |
+| `npm run build` | Build for production     |
+| `npm run start` | Start production server  |
+| `npm run lint`  | Run ESLint               |
 
 ### Tech Stack
 
 <div align="center">
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.1.6-000000?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19.2.4-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
-[![Plotly.js](https://img.shields.io/badge/Plotly.js-3.4.0-3F4F75?style=for-the-badge&logo=plotly)](https://plotly.com/javascript/)
-[![Radix UI](https://img.shields.io/badge/Radix_UI-Latest-7C3AED?style=for-the-badge)](https://www.radix-ui.com/)
+[!\[Next.js\](https://img.shields.io/badge/Next.js-16.1.6-000000?style=for-the-badge\&logo=next.js null)](https://nextjs.org/)
+[!\[React\](https://img.shields.io/badge/React-19.2.4-61DAFB?style=for-the-badge\&logo=react null)](https://reactjs.org/)
+[!\[TypeScript\](https://img.shields.io/badge/TypeScript-5.7.3-3178C6?style=for-the-badge\&logo=typescript null)](https://www.typescriptlang.org/)
+[!\[Tailwind CSS\](https://img.shields.io/badge/Tailwind\_CSS-4.2.0-38B2AC?style=for-the-badge\&logo=tailwind-css null)](https://tailwindcss.com/)
+[!\[Plotly.js\](https://img.shields.io/badge/Plotly.js-3.4.0-3F4F75?style=for-the-badge\&logo=plotly null)](https://plotly.com/javascript/)
+[!\[Radix UI\](https://img.shields.io/badge/Radix\_UI-Latest-7C3AED?style=for-the-badge null)](https://www.radix-ui.com/)
 
 </div>
 
@@ -297,16 +301,16 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 <div align="center">
 
-| Project | Description |
-|---------|-------------|
-| [Next.js](https://nextjs.org/) | The React Framework for Production |
-| [Radix UI](https://www.radix-ui.com/) | Unstyled, accessible UI components |
-| [Plotly.js](https://plotly.com/javascript/) | Open-source graphing library |
-| [Tailwind CSS](https://tailwindcss.com/) | Utility-first CSS framework |
+| Project                                     | Description                        |
+| ------------------------------------------- | ---------------------------------- |
+| [Next.js](https://nextjs.org/)              | The React Framework for Production |
+| [Radix UI](https://www.radix-ui.com/)       | Unstyled, accessible UI components |
+| [Plotly.js](https://plotly.com/javascript/) | Open-source graphing library       |
+| [Tailwind CSS](https://tailwindcss.com/)    | Utility-first CSS framework        |
 
 </div>
 
----
+***
 
 <div align="center">
 
