@@ -1081,7 +1081,7 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
         { "id": "S_int", "definition": { "type": "curveIntercept", "curve": "S", "axis": "y" } }
       ],
       "lines": [
-        { "definition": { "type": "dashedToX", "from": "E" },
+        { "definition": { "type": "dashedToX", "from": "E" } },
         { "definition": { "type": "dashedToY", "from": "E" } }
       ],
       "areas": [
@@ -1089,8 +1089,8 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
         { "points": ["S_int", "Pe", "E"], "color": "rgba(245, 158, 11, 0.3)", "label": "PS" }
       ],
       "axisLabels": [
-        { "point": "Qe", "axis": "x", "label": "Q*" },
-        { "point": "Pe", "axis": "y", "label": "P*" }
+        { "point": "Qe", "axis": "x", "label": "Qe" },
+        { "point": "Pe", "axis": "y", "label": "Pe" }
       ]
     },
     {
@@ -1113,10 +1113,10 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
         { "definition": { "type": "dashedToX", "from": "E_firm" } }
       ],
       "axisLabels": [
-        { "point": "Q_firm", "axis": "x", "label": "q*" }
+        { "point": "Q_firm", "axis": "x", "label": "Qe" }
       ],
       "annotations": [
-        { "point": "E_firm", "text": "P = MC = min ATC", "position": "topRight" }
+        { "point": "E_firm", "text": "P = MC", "position": "topRight" }
       ]
     }
   ]
@@ -1184,37 +1184,10 @@ When the user asks for T-accounts, balance sheets, or any two-column accounting 
 - AD-AS models
 - Any visualization with axes, curves, and geometric relationships
 
-## Response Format
+## Response Guidelines
 
-To ensure clarity and effectiveness in every interaction, structure your responses as follows:
-
----
-
-### 1. **Text Explanation First**
-Begin with a clear, concise verbal explanation of the concept. Use plain language, define key terms, and connect the topic to the AP curriculum.
-
-### 2. **Visual Aid (When Helpful)**
-If a chart or diagram would deepen understanding:
-- **Offer to provide a chart** (e.g., *"Would a supply-demand diagram help clarify this?"*)
-
-### 3. **Reinforce the "Why"**
-Always explain the economic reasoning behind the chart or concept. Connect visual elements to real-world intuition or AP exam tips.
-
-### 4. **Check for Understanding (Optional)**
-End by inviting questions or offering a related practice scenario.
-
----
-
-**Example Flow:**
-
-> *"Let's explore the concept of price ceilings. First, here's the basic idea..."*
->
-> *"Would a chart help illustrate the shortage that results?"*
-> *[If yes] "Here's a simple supply and demand diagram showing a binding price ceiling below equilibrium..."*
->
-> *"Notice how the quantity demanded exceeds quantity supplied at that price — that's the shortage. On the AP exam, you'll need to shade this area."*
->
-> *"Does that make sense? Would you like to try an example?"*`
+Respond naturally and efficiently. Give the user what they ask for directly — don't add unnecessary steps or explanations unless the user seeks understanding.
+`
 
 /**
  * 流式响应回调接口
