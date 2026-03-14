@@ -48,19 +48,6 @@ export interface CurveGeometry {
 }
 
 /**
- * 均衡点几何数据
- * 
- * @property x - X 坐标
- * @property y - Y 坐标
- * @property label - 均衡点标签
- */
-export interface EquilibriumGeometry {
-  x: number
-  y: number
-  label: string
-}
-
-/**
  * 虚线几何数据
  * 用于表示从点到坐标轴的虚线
  * 
@@ -189,28 +176,43 @@ export interface AxisGeometry {
 }
 
 /**
+ * 坐标轴标签几何数据
+ * 
+ * @property x - X 坐标
+ * @property y - Y 坐标
+ * @property label - 标签文本
+ * @property axis - 轴（'x' 或 'y'）
+ */
+export interface AxisLabelGeometry {
+  x: number
+  y: number
+  label: string
+  axis: 'x' | 'y'
+}
+
+/**
  * 几何数据输出格式
  * 这是规则引擎的输出格式，包含所有需要渲染的几何元素
  * 
  * @property curves - 曲线数据数组
- * @property equilibriumPoints - 均衡点数组
  * @property dashedLines - 虚线数组
  * @property shadedAreas - 阴影区域数组
  * @property braces - 花括号数组
  * @property annotations - 文本标注数组
- * @property markers - 标记点数组
+ * @property markers - 标记点数组（带标签显示）
+ * @property axisLabels - 坐标轴标签数组
  * @property arrows - 箭头数组
  * @property axis - 坐标轴配置
  * @property title - 图表标题
  */
 export interface GeometryData {
   curves: CurveGeometry[]
-  equilibriumPoints: EquilibriumGeometry[]
   dashedLines: DashedLineGeometry[]
   shadedAreas: ShadedAreaGeometry[]
   braces: BraceGeometry[]
   annotations: AnnotationGeometry[]
   markers: MarkerGeometry[]
+  axisLabels: AxisLabelGeometry[]
   arrows: ArrowGeometry[]
   axis: AxisGeometry
   title: string
@@ -355,12 +357,12 @@ export function createEmptyGeometryData(
 ): GeometryData {
   return {
     curves: [],
-    equilibriumPoints: [],
     dashedLines: [],
     shadedAreas: [],
     braces: [],
     annotations: [],
     markers: [],
+    axisLabels: [],
     arrows: [],
     axis: {
       xRange,

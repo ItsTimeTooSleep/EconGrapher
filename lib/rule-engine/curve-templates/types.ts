@@ -23,6 +23,7 @@ export type CurveTemplateType =
   | 'pointSet'         // 自定义点集曲线
   | 'derivedMR'        // 从需求曲线派生的 MR 曲线
   | 'derivedMFC'       // 从供给曲线派生的 MFC 曲线
+  | 'derivedATC'       // 从 AVC 和 AFC 派生的 ATC 曲线（ATC = AVC + AFC）
 
 /**
  * 基础曲线模板接口
@@ -162,6 +163,20 @@ export interface DerivedMFCCurveTemplate extends BaseCurveTemplate {
 }
 
 /**
+ * 派生 ATC 曲线模板
+ * 从 AVC 和 AFC 曲线自动派生平均总成本曲线
+ * ATC = AVC + AFC
+ * 
+ * @property fromAvcCurve - 源 AVC 曲线的 ID
+ * @property fromAfcCurve - 源 AFC 曲线的 ID
+ */
+export interface DerivedATCCurveTemplate extends BaseCurveTemplate {
+  type: 'derivedATC'
+  fromAvcCurve: string
+  fromAfcCurve: string
+}
+
+/**
  * 曲线模板联合类型
  */
 export type CurveTemplate = 
@@ -174,6 +189,7 @@ export type CurveTemplate =
   | PointSetCurveTemplate
   | DerivedMRCurveTemplate
   | DerivedMFCCurveTemplate
+  | DerivedATCCurveTemplate
 
 /**
  * 二次曲线方程参数
@@ -203,6 +219,8 @@ export interface CurveEquation {
   intercept?: number
   quadratic?: QuadraticEquation
   hyperbola?: HyperbolaEquation
+  verticalX?: number
+  horizontalY?: number
 }
 
 /**

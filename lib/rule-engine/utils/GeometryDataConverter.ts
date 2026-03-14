@@ -17,6 +17,7 @@ import type {
   AnnotationGeometry, 
   MarkerGeometry,
   ArrowGeometry,
+  AxisLabelGeometry,
   Point
 } from '../geometry-types'
 import { COLORS } from '@/components/charts/constants/colors'
@@ -40,6 +41,7 @@ interface PlotlyTrace {
   opacity?: number
   showlegend?: boolean
   hoverinfo?: string
+  hovertemplate?: string
   marker?: {
     color?: string
     symbol?: string
@@ -177,7 +179,6 @@ const VIEWPORT_CONFIG = {
   defaultRange: [0, 12] as [number, number],
   extremeThreshold: 500,
   weights: {
-    equilibrium: 1.0,
     annotation: 1.0,
     marker: 1.0,
     yIntercept: 0.9,
@@ -194,7 +195,6 @@ export class GeometryDataConverter {
   convert(geometryData: GeometryData): ConversionResult {
     const traces: PlotlyTrace[] = []
     const annotations: PlotlyAnnotation[] = []
-    const addedEquilibriumLabels = new Set<string>()
 
     geometryData.curves.forEach(curve => {
       const curveTrace = this.convertCurve(curve)
@@ -239,12 +239,16 @@ export class GeometryDataConverter {
       }
     })
 
-    geometryData.equilibriumPoints.forEach(eq => {
-      const labelKey = `${eq.x.toFixed(2)}_${eq.y.toFixed(2)}_${eq.label}`
-      if (!addedEquilibriumLabels.has(labelKey)) {
-        addedEquilibriumLabels.add(labelKey)
-        annotations.push(this.createEquilibriumAnnotation(eq.x, eq.y, eq.label))
-      }
+    console.log('[DEBUG] convert - geometryData.axisLabels:', geometryData.axisLabels)
+    
+    geometryData.axisLabels.forEach(axisLabel => {
+      console.log('[DEBUG] convert - processing axisLabel:', axisLabel)
+      annotations.push(this.createAxisLabelAnnotation(
+        axisLabel.x,
+        axisLabel.y,
+        axisLabel.label,
+        axisLabel.axis
+      ))
     })
 
     geometryData.markers.forEach(marker => {
@@ -311,12 +315,12 @@ export class GeometryDataConverter {
   private calculateViewport(geometryData: GeometryData): ViewportRange {
     const weightedPoints: WeightedPoint[] = []
 
-    geometryData.equilibriumPoints.forEach(point => {
-      weightedPoints.push({ x: point.x, y: point.y, weight: VIEWPORT_CONFIG.weights.equilibrium })
-    })
-
     geometryData.markers.forEach(marker => {
       weightedPoints.push({ x: marker.x, y: marker.y, weight: VIEWPORT_CONFIG.weights.marker })
+    })
+
+    geometryData.axisLabels.forEach(axisLabel => {
+      weightedPoints.push({ x: axisLabel.x, y: axisLabel.y, weight: VIEWPORT_CONFIG.weights.annotation })
     })
 
     geometryData.annotations.forEach(annotation => {
@@ -357,11 +361,12 @@ export class GeometryDataConverter {
     const bounds = this.calculateWeightedBounds(pointsToUse)
     const center = this.calculateWeightedCenter(pointsToUse)
 
+    const markersWithLabel = geometryData.markers.filter(m => m.label)
     const xRange = this.calculateCenteredAxisRange(
       bounds.minX,
       bounds.maxX,
       center.x,
-      geometryData.equilibriumPoints
+      markersWithLabel
     )
     const yRange = this.calculateCenteredAxisRange(
       bounds.minY,
@@ -604,19 +609,19 @@ export class GeometryDataConverter {
    * 核心算法：
    * 1. 先计算基础范围（包含所有点）
    * 2. 以加权中心为锚点，放大视口范围
-   * 3. 确保均衡点右侧有足够空间
+   * 3. 确保带标签点右侧有足够空间
    * 
    * @param min - 边界最小值
    * @param max - 边界最大值
    * @param center - 加权中心坐标
-   * @param equilibriumPoints - 均衡点数组（用于确保右侧空间）
+   * @param labeledPoints - 带标签点数组（用于确保右侧空间）
    * @returns 轴范围 [min, max]
    */
   private calculateCenteredAxisRange(
     min: number,
     max: number,
     center: number,
-    equilibriumPoints: { x: number; y: number; label: string }[]
+    labeledPoints: { x: number; y: number; label?: string }[]
   ): [number, number] {
     const range = max - min
 
@@ -642,8 +647,8 @@ export class GeometryDataConverter {
     let newMin = center - halfScaledRange
     let newMax = center + halfScaledRange
 
-    if (equilibriumPoints.length > 0) {
-      const maxEqX = Math.max(...equilibriumPoints.map(p => p.x))
+    if (labeledPoints.length > 0) {
+      const maxEqX = Math.max(...labeledPoints.map(p => p.x))
       const rightSpace = newMax - maxEqX
       const minRequiredSpace = scaledRange * VIEWPORT_CONFIG.minRightSpaceRatio
 
@@ -774,18 +779,19 @@ export class GeometryDataConverter {
   }
 
   private convertMarker(marker: MarkerGeometry): PlotlyTrace {
+    const hasLabel = marker.label && marker.label.trim() !== ''
     return {
       x: [marker.x],
       y: [marker.y],
       type: 'scatter',
-      mode: 'markers+text',
+      mode: hasLabel ? 'markers+text' : 'markers',
       marker: {
         color: marker.color,
         symbol: marker.symbol || 'circle',
         size: marker.size || 10
       },
-      text: marker.label || '',
-      textposition: 'top center',
+      text: hasLabel ? marker.label : '',
+      textposition: hasLabel ? 'top center' : undefined,
       showlegend: false,
       hoverinfo: 'none'
     }
@@ -959,24 +965,6 @@ export class GeometryDataConverter {
     }
     
     return { trace, annotation }
-  }
-
-  private createEquilibriumAnnotation(x: number, y: number, label: string): PlotlyAnnotation {
-    return {
-      x,
-      y,
-      xref: 'x',
-      yref: 'y',
-      text: label,
-      showarrow: false,
-      font: { color: COLORS.equilibrium, size: 12, weight: 'bold' },
-      bgcolor: 'rgba(255,255,255,0.95)',
-      borderpad: 3,
-      xanchor: 'left',
-      yanchor: 'bottom',
-      xshift: 5,
-      yshift: 5
-    }
   }
 
   private createAxisLabelAnnotation(

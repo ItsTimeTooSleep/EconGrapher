@@ -159,6 +159,14 @@ function convertCurves(curves: CurveDefinition[]): CurveTemplate[] {
           fromCurve: curve.fromCurve!
         }
         
+      case 'derivedATC':
+        return {
+          ...base,
+          type: 'derivedATC' as const,
+          fromAvcCurve: curve.fromAvcCurve!,
+          fromAfcCurve: curve.fromAfcCurve!
+        }
+        
       case 'hyperbola':
         return {
           ...base,

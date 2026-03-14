@@ -56,11 +56,13 @@ export class PrimitiveCalculator {
    * @returns 解析后的点映射
    */
   resolvePoints(points: PointPrimitive[]): Map<string, ResolvedPoint> {
+    console.log('[DEBUG] resolvePoints - starting with points:', points)
     // 构建依赖图
     const dependencies = this.buildDependencyGraph(points)
     
     // 拓扑排序
     const sortedIds = this.topologicalSort(dependencies)
+    console.log('[DEBUG] resolvePoints - sorted IDs:', sortedIds)
     
     // 按顺序解析点
     for (const id of sortedIds) {
@@ -70,6 +72,7 @@ export class PrimitiveCalculator {
       }
     }
     
+    console.log('[DEBUG] resolvePoints - resolvedPoints:', Array.from(this.resolvedPoints.entries()))
     return this.resolvedPoints
   }
   
@@ -80,12 +83,16 @@ export class PrimitiveCalculator {
    * @returns 解析后的点
    */
   private resolvePoint(point: PointPrimitive): ResolvedPoint {
+    console.log('[DEBUG] resolvePoint - resolving point:', point)
     // 检查是否已解析
     if (this.resolvedPoints.has(point.id)) {
-      return this.resolvedPoints.get(point.id)!
+      const existing = this.resolvedPoints.get(point.id)!
+      console.log('[DEBUG] resolvePoint - already resolved:', existing)
+      return existing
     }
     
     const coordinates = this.calculatePointCoordinates(point.definition)
+    console.log('[DEBUG] resolvePoint - calculated coordinates:', coordinates)
     
     const resolved: ResolvedPoint = {
       id: point.id,
@@ -95,6 +102,7 @@ export class PrimitiveCalculator {
       markerStyle: point.markerStyle
     }
     
+    console.log('[DEBUG] resolvePoint - resolved:', resolved)
     this.resolvedPoints.set(point.id, resolved)
     return resolved
   }
@@ -175,6 +183,10 @@ export class PrimitiveCalculator {
       
       case 'curveIntercept': {
         const curve = this.curves.get(definition.curve)
+        console.log('[DEBUG] curveIntercept - curve:', curve)
+        console.log('[DEBUG] curveIntercept - definition:', definition)
+        console.log('[DEBUG] curveIntercept - equation:', curve?.equation)
+        
         if (!curve) {
           throw new Error(`Curve not found: ${definition.curve}`)
         }
@@ -182,26 +194,38 @@ export class PrimitiveCalculator {
         if (definition.axis === 'y') {
           // Y 截距：x = 0 时的 y 值
           if (curve.equation?.intercept !== undefined) {
+            console.log('[DEBUG] curveIntercept - Y intercept from intercept:', { x: 0, y: curve.equation.intercept })
             return { x: 0, y: curve.equation.intercept }
+          }
+          // 对于垂直线，没有 Y 截距
+          if (curve.equation?.verticalX !== undefined) {
+            throw new Error(`Curve ${definition.curve} is vertical, no Y-intercept`)
           }
           // 对于点集曲线，取第一个点
           if (curve.points.length > 0) {
             const firstPoint = curve.points[0]
+            console.log('[DEBUG] curveIntercept - Y intercept from first point:', { x: 0, y: firstPoint.y })
             return { x: 0, y: firstPoint.y }
           }
           throw new Error(`Cannot determine Y-intercept for curve ${definition.curve}`)
         } else {
           // X 截距：y = 0 时的 x 值
+          if (curve.equation?.verticalX !== undefined) {
+            console.log('[DEBUG] curveIntercept - X intercept from verticalX:', { x: curve.equation.verticalX, y: 0 })
+            return { x: curve.equation.verticalX, y: 0 }
+          }
           if (curve.equation?.slope !== undefined && curve.equation?.intercept !== undefined) {
             if (curve.equation.slope === 0) {
               throw new Error(`Curve ${definition.curve} is horizontal, no X-intercept`)
             }
             const x = -curve.equation.intercept / curve.equation.slope
+            console.log('[DEBUG] curveIntercept - X intercept from equation:', { x, y: 0 })
             return { x, y: 0 }
           }
           // 对于点集曲线，找到 y=0 的点
           const x = getXAtY(curve, 0)
           if (x !== null) {
+            console.log('[DEBUG] curveIntercept - X intercept from point set:', { x, y: 0 })
             return { x, y: 0 }
           }
           throw new Error(`Cannot determine X-intercept for curve ${definition.curve}`)

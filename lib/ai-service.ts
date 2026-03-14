@@ -630,21 +630,27 @@ Draw arrows between points or curve positions. Useful for showing shifts, moveme
     { "id": "S", "label": "S", "type": "linear", "slope": 1, "intercept": 2 }
   ],
   "points": [
-    { "id": "E", "definition": { "type": "intersection", "curve1": "D", "curve2": "S" }, "label": "E", "showMarker": true }
+    { "id": "E", "definition": { "type": "intersection", "curve1": "D", "curve2": "S" }, "label": "E", "showMarker": true },
+    { "id": "D_int", "definition": { "type": "curveIntercept", "curve": "D", "axis": "y" } },
+    { "id": "S_int", "definition": { "type": "curveIntercept", "curve": "S", "axis": "y" } },
+    { "id": "Pe", "definition": { "type": "onAxis", "from": "E", "axis": "y" } },
+    { "id": "Qe", "definition": { "type": "onAxis", "from": "E", "axis": "x" } }
   ],
   "lines": [
-    { "definition": { "type": "dashedToX", "from": "E", "xLabel": "Qe" } },
-    { "definition": { "type": "dashedToY", "from": "E", "yLabel": "Pe" } }
+    { "definition": { "type": "dashedToX", "from": "E" },
+    { "definition": { "type": "dashedToY", "from": "E" } }
   ],
   "areas": [
     {
       "points": ["D_int", "Pe", "E"],
       "color": "rgba(59, 130, 246, 0.3)",
       "label": "CS"
+    },
+    {
+      "points": ["S_int", "Pe", "E"],
+      "color": "rgba(245, 158, 11, 0.3)",
+      "label": "PS"
     }
-  ],
-  "annotations": [
-    { "point": "E", "text": "Equilibrium", "position": "topRight" }
   ],
   "axisLabels": [
     { "point": "Qe", "axis": "x", "label": "Qe" },
@@ -654,7 +660,6 @@ Draw arrows between points or curve positions. Useful for showing shifts, moveme
 \`\`\`
 
 **Chart Structure Parameters:**
-- type (optional): "chart" (default: "chart")
 - title (required): chart title
 - xLabel (optional): X-axis label
 - yLabel (optional): Y-axis label
@@ -726,27 +731,37 @@ When you need to compare two markets, scenarios side by side, use the \`charts\`
 
 \`\`\`chart
 {
-  "title": "Market for Coffee",
-  "xLabel": "Quantity (units)",
-  "yLabel": "Price ($)",
+  "title": "Market Equilibrium",
+  "xLabel": "Quantity",
+  "yLabel": "Price",
+  "xRange": [0, 12],
+  "yRange": [0, 12],
   "curves": [
-    { "id": "D", "label": "D", "type": "linear", "slope": -1, "intercept": 10, "color": "#3b82f6" },
-    { "id": "S", "label": "S", "type": "linear", "slope": 1, "intercept": 2, "color": "#f59e0b" }
+    { "id": "D", "label": "D", "type": "linear", "slope": -1, "intercept": 10 },
+    { "id": "S", "label": "S", "type": "linear", "slope": 1, "intercept": 2 }
   ],
   "points": [
     { "id": "E", "definition": { "type": "intersection", "curve1": "D", "curve2": "S" }, "label": "E", "showMarker": true },
-    { "id": "Pe", "definition": { "type": "projectY", "from": "E" } },
-    { "id": "Qe", "definition": { "type": "projectX", "from": "E" } },
     { "id": "D_int", "definition": { "type": "curveIntercept", "curve": "D", "axis": "y" } },
-    { "id": "S_int", "definition": { "type": "curveIntercept", "curve": "S", "axis": "y" } }
+    { "id": "S_int", "definition": { "type": "curveIntercept", "curve": "S", "axis": "y" } },
+    { "id": "Pe", "definition": { "type": "projectY", "from": "E" } },
+    { "id": "Qe", "definition": { "type": "projectX", "from": "E" } }
   ],
   "lines": [
     { "definition": { "type": "dashedToX", "from": "E", "xLabel": "Qe" } },
     { "definition": { "type": "dashedToY", "from": "E", "yLabel": "Pe" } }
   ],
   "areas": [
-    { "points": ["D_int", "Pe", "E"], "color": "rgba(59, 130, 246, 0.3)", "label": "CS" },
-    { "points": ["S_int", "Pe", "E"], "color": "rgba(245, 158, 11, 0.3)", "label": "PS" }
+    {
+      "points": ["D_int", "Pe", "E"],
+      "color": "rgba(59, 130, 246, 0.3)",
+      "label": "CS"
+    },
+    {
+      "points": ["S_int", "Pe", "E"],
+      "color": "rgba(245, 158, 11, 0.3)",
+      "label": "PS"
+    }
   ],
   "axisLabels": [
     { "point": "Qe", "axis": "x", "label": "Qe" },
@@ -808,12 +823,12 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
     { "id": "D_int", "definition": { "type": "curveIntercept", "curve": "D", "axis": "y" } },
     { "id": "MC_int", "definition": { "type": "curveIntercept", "curve": "MC", "axis": "y" } }
   ],
-  "lines": [
-    { "definition": { "type": "dashedToX", "from": "Em", "xLabel": "Qm" } },
-    { "definition": { "type": "dashedToY", "from": "Pm", "yLabel": "Pm" } },
-    { "definition": { "type": "dashedToX", "from": "Ec", "xLabel": "Qc" } },
+"lines": [
+    { "definition": { "type": "dashedToX", "from": "Em" } },
+    { "definition": { "type": "dashedToY", "from": "Pm" } },
+    { "definition": { "type": "dashedToX", "from": "Ec" } },
     { "definition": { "type": "vertical", "from": "Em", "to": "Pm" }, "style": { "color": "#94a3b8", "width": 1.5, "dash": "dash" } }
-  ],
+],
   "areas": [
     { "points": ["D_int", "Pm_y", "Pm"], "color": "rgba(59, 130, 246, 0.3)", "label": "CS", "opacity": 0.3 },
     { "points": ["MC_int", "MC_at_Qm", "Pm", "Pm_y"], "color": "rgba(245, 158, 11, 0.3)", "label": "PS", "opacity": 0.3 },
@@ -825,8 +840,8 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
     { "point": "Pm_y", "axis": "y", "label": "Pm" }
   ],
   "annotations": [
-    { "point": "Em", "text": "MR = MC", "position": "bottomRight", "offset": { "x": 5, "y": -5 } },
-    { "point": "Ec", "text": "Socially Optimal\\nP = MC", "position": "topRight", "offset": { "x": 5, "y": 5 } }
+    { "point": "Em", "text": "Profit Maxinium", "position": "bottomRight", "offset": { "x": 5, "y": -5 } },
+    { "point": "Ec", "text": "Socially Optimal", "position": "topRight", "offset": { "x": 5, "y": 5 } }
   ]
 }
 \`\`\`
@@ -865,35 +880,32 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
   "points": [
     { "id": "E", "definition": { "type": "intersection", "curve1": "AD", "curve2": "SRAS" }, "label": "E", "showMarker": true },
     { "id": "Y", "definition": { "type": "projectX", "from": "E" } },
-    { "id": "P", "definition": { "type": "projectY", "from": "E" } }
+    { "id": "P", "definition": { "type": "projectY", "from": "E" } },
+    { "id": "Ye", "definition": { "type": "curveIntercept", "curve": "LRAS", "axis": "x" } }
   ],
-  "lines": [
-    { "definition": { "type": "dashedToX", "from": "E", "xLabel": "Y" } },
-    { "definition": { "type": "dashedToY", "from": "E", "yLabel": "P" } }
-  ],
+"lines": [
+    { "definition": { "type": "dashedToX", "from": "E" } },
+    { "definition": { "type": "dashedToY", "from": "E" } }
+],
   "axisLabels": [
     { "point": "Y", "axis": "x", "label": "Y" },
-    { "point": "P", "axis": "y", "label": "P" }
+    { "point": "P", "axis": "y", "label": "P" },
+    { "point": "Ye", "axis": "x", "label": "Ye" }
   ]
 }
 \`\`\`
 
 ### Cost Curves
 
-**IMPORTANT: MC and ATC Relationship**
-- MC must intersect ATC at ATC's minimum point
-- MC's minimum must be at a SMALLER x-value than ATC's minimum (MC reaches minimum first)
-- MC and ATC must be DIFFERENT curves - they should NOT coincide
-- At quantities below ATC minimum: MC < ATC (MC curve is below ATC)
-- At quantities above ATC minimum: MC > ATC (MC curve is above ATC)
-
-**CRITICAL: Use Geometric Point Definitions for Cost Curves**
-- Use \`curveMinimum\` to define minimum points of MC, ATC, AVC
+**Cost Curve Relationships:**
+- MC intersects ATC at ATC's minimum and AVC at AVC's minimum
+- ATC = AVC + AFC (Average Total Cost = Average Variable Cost + Average Fixed Cost)
+- AFC is a hyperbola (y = FC/Q), continuously decreasing as quantity increases
+- Use \`derivedATC\` to automatically calculate ATC from AVC and AFC
 - Use \`intersection\` to define where MC intersects ATC and AVC
-- Use \`projectX\` and \`projectY\` to create axis projection points
-- Add dashed lines to axes for key points (minimum points, intersections)
+- Use \`axisLabels\` for axis labels
 
-**Example with proper geometric definitions:**
+**Example with All Cost Curves (MC, AVC, AFC, ATC):**
 \`\`\`chart
 {
   "title": "Firm Cost Curves",
@@ -903,60 +915,28 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
   "yRange": [0, 20],
   "curves": [
     { "id": "MC", "label": "MC", "type": "uShape", "minimum": { "x": 4, "y": 5 }, "leftIntercept": 15, "color": "#ef4444" },
-    { "id": "ATC", "label": "ATC", "type": "uShape", "minimum": { "x": 6, "y": 8 }, "leftIntercept": 25, "color": "#10b981" },
-    { "id": "AVC", "label": "AVC", "type": "uShape", "minimum": { "x": 5, "y": 6 }, "leftIntercept": 12, "color": "#6366f1" }
+    { "id": "AVC", "label": "AVC", "type": "uShape", "minimum": { "x": 5, "y": 6 }, "leftIntercept": 12, "color": "#6366f1" },
+    { "id": "AFC", "label": "AFC", "type": "hyperbola", "k": 30, "color": "#8b5cf6" },
+    { "id": "ATC", "label": "ATC", "type": "derivedATC", "fromAvcCurve": "AVC", "fromAfcCurve": "AFC", "color": "#10b981" }
   ],
   "points": [
-    { "id": "MC_min", "definition": { "type": "curveMinimum", "curve": "MC" } },
-    { "id": "AVC_min", "definition": { "type": "curveMinimum", "curve": "AVC" } },
-    { "id": "ATC_min", "definition": { "type": "curveMinimum", "curve": "ATC" } },
-    { "id": "MC_ATC_int", "definition": { "type": "intersection", "curve1": "MC", "curve2": "ATC" }, "showMarker": true },
-    { "id": "MC_AVC_int", "definition": { "type": "intersection", "curve1": "MC", "curve2": "AVC" }, "showMarker": true },
-    { "id": "Q1", "definition": { "type": "projectX", "from": "MC_min" } },
-    { "id": "Q2", "definition": { "type": "projectX", "from": "AVC_min" } },
-    { "id": "Q3", "definition": { "type": "projectX", "from": "ATC_min" } }
-  ],
-  "lines": [
-    { "definition": { "type": "dashedToX", "from": "MC_min" } },
-    { "definition": { "type": "dashedToX", "from": "AVC_min" } },
-    { "definition": { "type": "dashedToX", "from": "ATC_min" } }
+    { "id": "MC_ATC_int", "definition": { "type": "intersection", "curve1": "MC", "curve2": "ATC" } },
+    { "id": "MC_AVC_int", "definition": { "type": "intersection", "curve1": "MC", "curve2": "AVC" } }
   ],
   "axisLabels": [
-    { "point": "Q1", "axis": "x", "label": "Q₁" },
-    { "point": "Q2", "axis": "x", "label": "Q₂" },
-    { "point": "Q3", "axis": "x", "label": "Q₃" }
-  ]
-}
-\`\`\`
-
-**Key Points Explained:**
-- **MC_min, AVC_min, ATC_min**: Defined using \`curveMinimum\` - automatically derived from curve definitions
-- **MC_ATC_int, MC_AVC_int**: Defined using \`intersection\` - MC intersects ATC and AVC at their minimums
-- **Q1, Q2, Q3**: Projections to X-axis for axis labels
-- **Dashed lines**: Extend from minimum points to X-axis for visual clarity
-- **No text annotations on chart**: Explanations go in the text response, not on the chart
-
-**Example with AFC (Average Fixed Cost):**
-\`\`\`chart
-{
-  "title": "All Cost Curves",
-  "xLabel": "Quantity",
-  "yLabel": "Cost",
-  "curves": [
-    { "id": "MC", "label": "MC", "type": "uShape", "minimum": { "x": 4, "y": 5 }, "leftIntercept": 15, "color": "#ef4444" },
-    { "id": "ATC", "label": "ATC", "type": "uShape", "minimum": { "x": 6, "y": 8 }, "leftIntercept": 25, "color": "#10b981" },
-    { "id": "AVC", "label": "AVC", "type": "uShape", "minimum": { "x": 5, "y": 6 }, "leftIntercept": 12, "color": "#6366f1" },
-    { "id": "AFC", "label": "AFC", "type": "hyperbola", "k": 50, "color": "#8b5cf6", "dashed": true }
+    { "point": "MC_AVC_int", "label": "Q₂", "axis": "x" },
+    { "point": "MC_AVC_int", "label": "C₂", "axis": "y" },
+    { "point": "MC_ATC_int", "label": "Q₃", "axis": "x" },
+    { "point": "MC_ATC_int", "label": "C₃", "axis": "y" }
   ],
-  "points": [
-    { "id": "ATC_min", "definition": { "type": "curveMinimum", "curve": "ATC" } },
-    { "id": "AVC_min", "definition": { "type": "curveMinimum", "curve": "AVC" } },
-    { "id": "MC_ATC_int", "definition": { "type": "intersection", "curve1": "MC", "curve2": "ATC" }, "showMarker": true },
-    { "id": "MC_AVC_int", "definition": { "type": "intersection", "curve1": "MC", "curve2": "AVC" }, "showMarker": true }
+  "lines": [
+    { "definition": { "type": "dashedToX", "from": "MC_AVC_int" } },
+    { "definition": { "type": "dashedToY", "from": "MC_AVC_int" } },
+    { "definition": { "type": "dashedToX", "from": "MC_ATC_int" } },
+    { "definition": { "type": "dashedToY", "from": "MC_ATC_int" } }
   ]
 }
 \`\`\`
-Note: AFC is a hyperbola (y = FC/Q), continuously decreasing as quantity increases. The vertical distance between ATC and AVC equals AFC.
 
 ### PPC (Production Possibilities Curve)
 \`\`\`chart
@@ -1063,8 +1043,8 @@ Note: AFC is a hyperbola (y = FC/Q), continuously decreasing as quantity increas
         { "id": "S_int", "definition": { "type": "curveIntercept", "curve": "S", "axis": "y" } }
       ],
       "lines": [
-        { "definition": { "type": "dashedToX", "from": "E", "xLabel": "Q*" } },
-        { "definition": { "type": "dashedToY", "from": "E", "yLabel": "P*" } }
+        { "definition": { "type": "dashedToX", "from": "E" },
+        { "definition": { "type": "dashedToY", "from": "E" } }
       ],
       "areas": [
         { "points": ["D_int", "Pe", "E"], "color": "rgba(59, 130, 246, 0.3)", "label": "CS" },
@@ -1092,7 +1072,7 @@ Note: AFC is a hyperbola (y = FC/Q), continuously decreasing as quantity increas
         { "id": "ATC_at_Q", "definition": { "type": "onCurve", "curve": "ATC", "x": 6 } }
       ],
       "lines": [
-        { "definition": { "type": "dashedToX", "from": "E_firm", "xLabel": "q*" } }
+        { "definition": { "type": "dashedToX", "from": "E_firm" } }
       ],
       "axisLabels": [
         { "point": "Q_firm", "axis": "x", "label": "q*" }
@@ -1107,36 +1087,17 @@ Note: AFC is a hyperbola (y = FC/Q), continuously decreasing as quantity increas
 
 ## Best Practices
 
-1. **Point Visibility**: Points are invisible by default (showMarker: false). Only set showMarker: true for key points that need visual markers (like equilibrium points, intersections).
-
-2. **Axis Labels**: For labels on axes (like Qe, Pe, Y, P), use axisLabels configuration, not showMarker on points.
-
-3. **ID Naming**: Use uppercase for curves (D, S, MR, MC), meaningful names for points (E for equilibrium, M for monopoly).
-
-4. **Colors**: Use preset colors for consistency, semi-transparent (opacity 0.3) for areas.
-
-5. **Axis Range**: Default [0, 12] for both axes, adjust to fit all elements.
-
-6. **Dashed Lines to Axes**: ALWAYS add dashed lines from important points to both axes:
-   - Use \`dashedToX\` to extend a point to the X-axis
-   - Use \`dashedToY\` to extend a point to the Y-axis
-   - This helps readers identify the exact coordinates of key points
-   - Example: For equilibrium point E, add both \`dashedToX\` and \`dashedToY\`
-
-7. **Minimal Annotations on Chart**: Keep the chart clean and readable:
-   - DO NOT put long explanations in annotation text (e.g., "MC minimum\n(occurs first)")
-   - DO put simple labels (e.g., "E", "M", "min ATC")
-   - Put detailed explanations in your text response, NOT on the chart
-   - Use axisLabels for coordinate values (Qe, Pe, Q₁, Q₂, etc.)
-
-8. **Geometric Point Definitions**: ALWAYS use geometric definitions instead of fixed coordinates:
-   - Use \`intersection\` for curve intersections
-   - Use \`curveMinimum\` for U-shape curve minimums
-   - Use \`curveMaximum\` for N-shape curve maximums
-   - Use \`projectX\` and \`projectY\` for axis projections
-   - This ensures accuracy and consistency
-
-9. **Definition Order**: Define curves first, then points that depend on curves, then projections.
+- Use \`showMarker: true\` only for key points that need visual markers (like equilibrium points, intersections)
+- Use \`axisLabels\` for labels on axes (like Qe, Pe, Y, P)
+- Use uppercase for curves (D, S, MR, MC), meaningful names for points (E for equilibrium, M for monopoly)
+- Use preset colors for consistency, semi-transparent (opacity 0.3) for areas
+- Default axis range [0, 12] for both axes, adjust to fit all elements
+- Add dashed lines from important points to both axes using \`dashedToX\` and \`dashedToY\`
+- Keep the chart clean: put simple labels on the chart, detailed explanations in your text response
+- Use geometric definitions instead of fixed coordinates:
+  - Use \`intersection\` for curve intersections
+  - Use \`derivedATC\` to calculate ATC from AVC and AFC
+  - Use \`axisLabels\` for axis labels
 
 ## Other Charts
 ### T-table (T-account / Balance Sheet)
@@ -1261,7 +1222,6 @@ export interface AIResponse {
  */
 function parseChartConfig(config: Record<string, unknown>): ChartData {
   const chart: ChartData = {
-    type: 'chart',
     title: config.title as string || 'Untitled',
     xLabel: config.xLabel as string,
     yLabel: config.yLabel as string,

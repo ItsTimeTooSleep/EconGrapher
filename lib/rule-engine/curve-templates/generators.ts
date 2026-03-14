@@ -25,20 +25,20 @@ import type {
   PointSetCurveTemplate,
   DerivedMRCurveTemplate,
   DerivedMFCCurveTemplate,
+  DerivedATCCurveTemplate,
   ResolvedCurve
 } from './types'
 import { DEFAULT_CURVE_STYLE, getCurveColor } from './types'
 
 /**
- * 线性曲线的极大范围
- * 用于实现"无限延长"效果
- * Plotly 会自动裁剪超出视口的部分
+ * 线性曲线的范围
+ * 使用合理范围以确保 Plotly 悬停检测正常工作
  */
 const EXTENDED_RANGE = {
-  minX: -1000,
-  maxX: 10000,
-  minY: -1000,
-  maxY: 10000
+  minX: -50,
+  maxX: 100,
+  minY: -50,
+  maxY: 100
 }
 
 /**
@@ -86,7 +86,7 @@ interface UShapeResult {
  * @returns 点集数组和方程参数
  */
 export function generateUShapePoints(template: UShapeCurveTemplate): UShapeResult {
-  const { minimum, leftIntercept, rightY, steepness = 1 } = template
+  const { minimum, leftIntercept, rightY, steepness = 3 } = template
   const points: Point[] = []
   
   const h = minimum.x
@@ -210,26 +210,36 @@ export function generateHyperbolaPoints(template: HyperbolaCurveTemplate): Hyper
  * 生成垂直线的点集
  * 
  * @param template - 垂直线模板
- * @returns 点集数组（两个端点）
+ * @returns 点集数组
  */
 export function generateVerticalLinePoints(template: VerticalLineTemplate): Point[] {
-  return [
-    { x: template.x, y: EXTENDED_RANGE.minY },
-    { x: template.x, y: EXTENDED_RANGE.maxY }
-  ]
+  const points: Point[] = []
+  const steps = 100
+  
+  for (let i = 0; i <= steps; i++) {
+    const y = EXTENDED_RANGE.minY + (i / steps) * (EXTENDED_RANGE.maxY - EXTENDED_RANGE.minY)
+    points.push({ x: template.x, y })
+  }
+  
+  return points
 }
 
 /**
  * 生成水平线的点集
  * 
  * @param template - 水平线模板
- * @returns 点集数组（两个端点）
+ * @returns 点集数组
  */
 export function generateHorizontalLinePoints(template: HorizontalLineTemplate): Point[] {
-  return [
-    { x: EXTENDED_RANGE.minX, y: template.y },
-    { x: EXTENDED_RANGE.maxX, y: template.y }
-  ]
+  const points: Point[] = []
+  const steps = 100
+  
+  for (let i = 0; i <= steps; i++) {
+    const x = EXTENDED_RANGE.minX + (i / steps) * (EXTENDED_RANGE.maxX - EXTENDED_RANGE.minX)
+    points.push({ x, y: template.y })
+  }
+  
+  return points
 }
 
 /**
@@ -283,12 +293,14 @@ export function resolveCurve(
       
     case 'vertical':
       points = generateVerticalLinePoints(template)
-      equation = { slope: Infinity, intercept: undefined }
+      equation = { slope: Infinity, intercept: undefined, verticalX: template.x } as any
+      console.log('[DEBUG] resolveCurve - vertical:', { id: template.id, x: template.x, equation })
       break
       
     case 'horizontal':
       points = generateHorizontalLinePoints(template)
-      equation = { slope: 0, intercept: template.y }
+      equation = { slope: 0, intercept: template.y, horizontalY: template.y } as any
+      console.log('[DEBUG] resolveCurve - horizontal:', { id: template.id, y: template.y, equation })
       break
       
     case 'pointSet':
@@ -301,6 +313,10 @@ export function resolveCurve(
       
     case 'derivedMFC':
       points = generateDerivedMFCPoints(template, resolvedCurves)
+      break
+      
+    case 'derivedATC':
+      points = generateDerivedATCPoints(template, resolvedCurves)
       break
       
     default:
@@ -397,6 +413,62 @@ function generateDerivedMFCPoints(
 }
 
 /**
+ * 生成派生 ATC 曲线的点集
+ * 
+ * ATC = AVC + AFC
+ * 
+ * @param template - 派生 ATC 曲线模板
+ * @param resolvedCurves - 已解析的曲线映射
+ * @returns 点集数组
+ */
+function generateDerivedATCPoints(
+  template: DerivedATCCurveTemplate,
+  resolvedCurves?: Map<string, ResolvedCurve>
+): Point[] {
+  if (!resolvedCurves) {
+    throw new Error('resolvedCurves is required for derived ATC curve')
+  }
+  
+  const avcCurve = resolvedCurves.get(template.fromAvcCurve)
+  const afcCurve = resolvedCurves.get(template.fromAfcCurve)
+  
+  if (!avcCurve) {
+    throw new Error(`AVC curve not found: ${template.fromAvcCurve}`)
+  }
+  if (!afcCurve) {
+    throw new Error(`AFC curve not found: ${template.fromAfcCurve}`)
+  }
+  
+  const points: Point[] = []
+  
+  // 找到两条曲线的共同 X 范围
+  const minX = Math.max(
+    Math.min(...avcCurve.points.map(p => p.x)),
+    Math.min(...afcCurve.points.map(p => p.x))
+  )
+  const maxX = Math.min(
+    Math.max(...avcCurve.points.map(p => p.x)),
+    Math.max(...afcCurve.points.map(p => p.x))
+  )
+  
+  const steps = 100
+  for (let i = 0; i <= steps; i++) {
+    const x = minX + (i / steps) * (maxX - minX)
+    const avcY = getYAtX(avcCurve, x)
+    const afcY = getYAtX(afcCurve, x)
+    
+    if (avcY !== null && afcY !== null) {
+      const atcY = avcY + afcY
+      if (atcY >= 0) {
+        points.push({ x, y: atcY })
+      }
+    }
+  }
+  
+  return points
+}
+
+/**
  * 批量解析曲线模板
  * 
  * 按依赖顺序解析曲线，先解析基础曲线，再解析派生曲线。
@@ -411,7 +483,7 @@ export function resolveCurves(templates: CurveTemplate[]): Map<string, ResolvedC
   const derivedTemplates: CurveTemplate[] = []
   
   for (const template of templates) {
-    if (template.type === 'derivedMR' || template.type === 'derivedMFC') {
+    if (template.type === 'derivedMR' || template.type === 'derivedMFC' || template.type === 'derivedATC') {
       derivedTemplates.push(template)
     } else {
       const resolved = resolveCurve(template, resolvedCurves)

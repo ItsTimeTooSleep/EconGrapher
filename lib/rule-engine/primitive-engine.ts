@@ -114,13 +114,17 @@ export class PrimitiveEngine {
       }
     }
     
-    // 添加均衡点（从解析后的点中选择需要显示的点）
+    // 添加标记点
+    // 当 showMarker 为 true 时显示标记点，有 label 时同时显示标签
     for (const point of primitives.points) {
       if (point.showMarker) {
-        geometryData.equilibriumPoints.push({
+        geometryData.markers.push({
           x: point.coordinates.x,
           y: point.coordinates.y,
-          label: point.label || point.id
+          label: point.label,
+          color: point.markerStyle?.color || '#1e293b',
+          symbol: point.markerStyle?.symbol || 'circle',
+          size: point.markerStyle?.size || 8
         })
       }
     }
@@ -133,20 +137,6 @@ export class PrimitiveEngine {
         text: annotation.text,
         arrowDirection: this.positionToArrowDirection(annotation.position)
       })
-    }
-    
-    // 添加标记点
-    for (const point of primitives.points) {
-      if (point.showMarker && point.markerStyle) {
-        geometryData.markers.push({
-          x: point.coordinates.x,
-          y: point.coordinates.y,
-          label: point.label,
-          color: point.markerStyle.color || '#1e293b',
-          symbol: point.markerStyle.symbol || 'circle',
-          size: point.markerStyle.size || 8
-        })
-      }
     }
     
     // 添加箭头
@@ -163,6 +153,22 @@ export class PrimitiveEngine {
         labelPosition: arrow.labelPosition
       })
     }
+    
+    // 添加轴标签
+    for (const axisLabel of primitives.axisLabels) {
+      console.log('[DEBUG] buildGeometryData - adding axisLabel:', axisLabel)
+      // 根据坐标判断是 x 轴还是 y 轴标签
+      const isXAxis = axisLabel.y === 0
+      const axis = isXAxis ? 'x' : 'y'
+      geometryData.axisLabels.push({
+        x: axisLabel.x,
+        y: axisLabel.y,
+        label: axisLabel.label,
+        axis
+      })
+    }
+    
+    console.log('[DEBUG] buildGeometryData - geometryData.axisLabels:', geometryData.axisLabels)
     
     return geometryData
   }

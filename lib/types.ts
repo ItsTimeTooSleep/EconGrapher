@@ -28,7 +28,6 @@ export interface Session {
  * AI 通过曲线模板和几何原语描述图表。
  */
 export interface ChartData {
-  type: 'chart'
   title: string
   xLabel?: string
   yLabel?: string
@@ -67,6 +66,8 @@ export interface CurveDefinition {
   points?: Array<{ x: number; y: number }>
   smooth?: boolean
   fromCurve?: string
+  fromAvcCurve?: string
+  fromAfcCurve?: string
   k?: number
   h?: number
   v?: number
@@ -86,6 +87,7 @@ export type CurveType =
   | 'pointSet'
   | 'derivedMR'
   | 'derivedMFC'
+  | 'derivedATC'
 
 /**
  * 点定义

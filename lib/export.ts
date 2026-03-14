@@ -30,42 +30,6 @@ function formatTimestamp(timestamp: number): string {
 }
 
 /**
- * 获取图表类型的中文描述
- * @param chartType - 图表类型标识
- * @returns 图表类型的中文名称
- */
-function getChartTypeName(chartType: string): string {
-  const chartTypeNames: Record<string, string> = {
-    chart: '经济学图表',
-    supply_demand: '供需曲线',
-    ad_as: '总需求-总供给模型',
-    cost_curves: '成本曲线',
-    money_market: '货币市场',
-    phillips_curve: '菲利普斯曲线',
-    loanable_funds: '可贷资金市场',
-    ppc: '生产可能性曲线',
-    consumer_producer_surplus: '消费者与生产者剩余',
-    price_control: '价格管制',
-    tax_subsidy: '税收与补贴',
-    perfect_competition: '完全竞争',
-    monopoly: '垄断',
-    natural_monopoly: '自然垄断',
-    monopolistic_competition: '垄断竞争',
-    labor_market: '劳动力市场',
-    monopsony: '买方垄断',
-    externality: '外部性',
-    lorenz_curve: '洛伦兹曲线',
-    business_cycle: '经济周期',
-    reserve_market: '准备金市场',
-    forex_market: '外汇市场',
-    balance_of_payments: '国际收支平衡',
-    circular_flow: '循环流向图',
-    multi_chart: '多图表组合'
-  }
-  return chartTypeNames[chartType] || chartType
-}
-
-/**
  * 将图表数据转换为 Markdown 格式的描述
  * @param chart - 图表数据对象
  * @param indent - 缩进空格数
@@ -74,7 +38,6 @@ function getChartTypeName(chartType: string): string {
 function chartToMarkdown(chart: ChartData, indent: number = 0): string {
   const spaces = ' '.repeat(indent)
   let md = `${spaces}### 📊 图表: ${chart.title}\n\n`
-  md += `${spaces}- **类型**: ${getChartTypeName(chart.type)}\n`
 
   if (chart.xLabel) {
     md += `${spaces}- **X轴**: ${chart.xLabel}\n`
