@@ -48,11 +48,11 @@ function chartDataToPrimitiveConfig(chart: ChartData): PrimitiveSemanticConfig {
     xRange: chart.xRange,
     yRange: chart.yRange,
     curves: convertCurves(chart.curves),
-    points: chart.points,
-    lines: chart.lines,
-    areas: chart.areas,
-    annotations: chart.annotations,
-    axisLabels: chart.axisLabels,
+    points: chart.points || [],
+    lines: chart.lines || [],
+    areas: chart.areas || [],
+    annotations: chart.annotations || [],
+    axisLabels: chart.axisLabels || [],
     arrows: convertArrows(chart.arrows)
   }
 }
@@ -85,6 +85,9 @@ function convertArrows(arrows?: ArrowDefinition[]): PrimitiveSemanticConfig['arr
  * @returns 曲线模板数组
  */
 function convertCurves(curves: CurveDefinition[]): CurveTemplate[] {
+  if (!curves || !Array.isArray(curves)) {
+    return []
+  }
   return curves.map(curve => {
     const base = {
       id: curve.id,

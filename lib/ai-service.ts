@@ -944,6 +944,8 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
   "title": "Production Possibilities Curve",
   "xLabel": "Consumer Goods",
   "yLabel": "Capital Goods",
+  "xRange": [0, 12],
+  "yRange": [0, 12],
   "curves": [
     {
       "id": "PPC",
@@ -951,13 +953,25 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
       "type": "pointSet",
       "points": [
         { "x": 0, "y": 10 },
-        { "x": 3, "y": 9 },
-        { "x": 6, "y": 6 },
-        { "x": 9, "y": 3 },
+        { "x": 2, "y": 9.8 },
+        { "x": 4, "y": 9.2 },
+        { "x": 6, "y": 8 },
+        { "x": 7.5, "y": 6.6 },
+        { "x": 8.5, "y": 5.2 },
+        { "x": 9.2, "y": 3.8 },
+        { "x": 9.7, "y": 2.2 },
         { "x": 10, "y": 0 }
       ],
       "smooth": true
     }
+  ],
+  "points": [
+    { "id": "A", "definition": { "type": "fixed", "x": 5, "y": 5 }, "label": "A", "showMarker": true },
+    { "id": "B", "definition": { "type": "fixed", "x": 8, "y": 8 }, "label": "B", "showMarker": true }
+  ],
+  "annotations": [
+    { "point": "A", "text": "Inefficient\n(under-utilization)", "position": "bottomLeft" },
+    { "point": "B", "text": "Impossible\n(unattainable)", "position": "topRight" }
   ]
 }
 \`\`\`
@@ -978,34 +992,58 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
       "title": "Perfect Competition",
       "xLabel": "Quantity",
       "yLabel": "Price",
+      "xRange": [0, 12],
+      "yRange": [0, 12],
       "curves": [
-        { "id": "D", "label": "D", "type": "horizontal", "y": 6, "color": "#3b82f6" },
+        { "id": "D", "label": "MR=D=AR=P", "type": "horizontal", "y": 6, "color": "#3b82f6" },
         { "id": "MC", "label": "MC", "type": "uShape", "minimum": { "x": 5, "y": 4 }, "leftIntercept": 12, "color": "#ef4444" }
       ],
       "points": [
-        { "id": "E", "definition": { "type": "intersection", "curve1": "D", "curve2": "MC" }, "showMarker": true }
+        { "id": "E", "definition": { "type": "intersection", "curve1": "D", "curve2": "MC" }, "showMarker": true },
+        { "id": "Qc", "definition": { "type": "projectX", "from": "E" } },
+        { "id": "Pc", "definition": { "type": "projectY", "from": "E" } }
+      ],
+      "axisLabels": [
+        { "point": "Qc", "axis": "x", "label": "Qc" },
+        { "point": "Pc", "axis": "y", "label": "Pc" }
       ],
       "lines": [
-        { "definition": { "type": "dashedToX", "from": "E", "xLabel": "Qc" } },
-        { "definition": { "type": "dashedToY", "from": "E", "yLabel": "Pc" } }
+        { "definition": { "type": "dashedToX", "from": "E" } },
+        { "definition": { "type": "dashedToY", "from": "E" } }
       ]
     },
     {
       "title": "Monopoly",
       "xLabel": "Quantity",
       "yLabel": "Price",
+      "xRange": [0, 12],
+      "yRange": [0, 12],
       "curves": [
-        { "id": "D", "label": "D", "type": "linear", "slope": -1, "intercept": 12, "color": "#3b82f6" },
+        { "id": "D", "label": "D", "type": "linear", "slope": -0.8, "intercept": 10, "color": "#3b82f6" },
         { "id": "MR", "label": "MR", "type": "derivedMR", "fromCurve": "D", "color": "#f97316" },
-        { "id": "MC", "label": "MC", "type": "uShape", "minimum": { "x": 5, "y": 4 }, "leftIntercept": 12, "color": "#ef4444" }
+        { "id": "MC", "label": "MC", "type": "uShape", "minimum": { "x": 3, "y": 2 }, "leftIntercept": 8, "color": "#ef4444" },
+        { "id": "ATC", "label": "ATC", "type": "uShape", "minimum": { "x": 5, "y": 4 }, "leftIntercept": 10, "color": "#10b981" }
       ],
       "points": [
         { "id": "Em", "definition": { "type": "intersection", "curve1": "MR", "curve2": "MC" }, "showMarker": true },
-        { "id": "Pm", "definition": { "type": "onCurve", "curve": "D", "x": 4 } }
+        { "id": "Pm", "definition": { "type": "onCurveAtPointX", "curve": "D", "from": "Em" } },
+        { "id": "Qm", "definition": { "type": "projectX", "from": "Em" } },
+        { "id": "Pm_y", "definition": { "type": "projectY", "from": "Pm" } },
+        { "id": "ATC_at_Qm", "definition": { "type": "onCurveAtPointX", "curve": "ATC", "from": "Em" } },
+        { "id": "ATC_y", "definition": { "type": "projectY", "from": "ATC_at_Qm" } }
+      ],
+      "axisLabels": [
+        { "point": "Qm", "axis": "x", "label": "Qm" },
+        { "point": "Pm_y", "axis": "y", "label": "Pm" }
       ],
       "lines": [
-        { "definition": { "type": "dashedToX", "from": "Em", "xLabel": "Qm" } },
-        { "definition": { "type": "dashedToY", "from": "Pm" } }
+        { "definition": { "type": "dashedToX", "from": "Em" } },
+        { "definition": { "type": "dashedToY", "from": "Pm" } },
+        { "definition": { "type": "dashedToY", "from": "ATC_at_Qm" } },
+        { "definition": { "type": "horizontal", "from": "ATC_at_Qm", "to": "Qm" } }
+      ],
+      "areas": [
+        { "points": ["Pm_y", "ATC_y", "ATC_at_Qm", "Pm"], "color": "rgba(16, 185, 129, 0.3)", "label": "Profit" }
       ]
     }
   ]

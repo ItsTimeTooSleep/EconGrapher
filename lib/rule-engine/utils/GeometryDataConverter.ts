@@ -104,6 +104,8 @@ interface PlotlyLayout {
     showgrid?: boolean
     zeroline?: boolean
     showticklabels?: boolean
+    scaleanchor?: string
+    scaleratio?: number
   }
   yaxis?: {
     title?: string | {
@@ -147,6 +149,7 @@ interface PlotlyLayout {
       color?: string
       size?: number
     }
+    visible?: boolean
   }
   hoverlabel?: {
     bgcolor?: string
@@ -281,7 +284,9 @@ export class GeometryDataConverter {
         title: {
           text: geometryData.axis.xLabel,
           font: { color: COLORS.text, size: 12, family: 'Inter, system-ui, sans-serif' }
-        }
+        },
+        scaleanchor: 'y',
+        scaleratio: 1
       },
       yaxis: {
         ...DARK_LAYOUT_BASE.yaxis,
@@ -290,6 +295,15 @@ export class GeometryDataConverter {
           text: geometryData.axis.yLabel,
           font: { color: COLORS.text, size: 12, family: 'Inter, system-ui, sans-serif' }
         }
+      },
+      legend: {
+        x: 0.98,
+        y: 0.98,
+        xanchor: 'right',
+        yanchor: 'top',
+        bgcolor: 'rgba(255, 255, 255, 0.95)',
+        bordercolor: 'rgba(0, 0, 0, 0.1)',
+        borderwidth: 1
       },
       annotations
     }
@@ -313,6 +327,13 @@ export class GeometryDataConverter {
    * @returns 计算出的视口范围
    */
   private calculateViewport(geometryData: GeometryData): ViewportRange {
+    if (geometryData.axis.xRange && geometryData.axis.yRange) {
+      return {
+        xRange: geometryData.axis.xRange,
+        yRange: geometryData.axis.yRange
+      }
+    }
+
     const weightedPoints: WeightedPoint[] = []
 
     geometryData.markers.forEach(marker => {
@@ -362,20 +383,36 @@ export class GeometryDataConverter {
     const center = this.calculateWeightedCenter(pointsToUse)
 
     const markersWithLabel = geometryData.markers.filter(m => m.label)
-    const xRange = this.calculateCenteredAxisRange(
+    let xRange = this.calculateCenteredAxisRange(
       bounds.minX,
       bounds.maxX,
       center.x,
       markersWithLabel
     )
-    const yRange = this.calculateCenteredAxisRange(
+    let yRange = this.calculateCenteredAxisRange(
       bounds.minY,
       bounds.maxY,
       center.y,
       []
     )
 
-    return { xRange, yRange }
+    const xRangeLength = xRange[1] - xRange[0]
+    const yRangeLength = yRange[1] - yRange[0]
+    const maxRange = Math.max(xRangeLength, yRangeLength)
+
+    const xCenter = (xRange[0] + xRange[1]) / 2
+    const yCenter = (yRange[0] + yRange[1]) / 2
+
+    const finalXRange = [
+      Math.max(0, xCenter - maxRange / 2),
+      xCenter + maxRange / 2
+    ] as [number, number]
+    const finalYRange = [
+      Math.max(0, yCenter - maxRange / 2),
+      yCenter + maxRange / 2
+    ] as [number, number]
+
+    return { xRange: finalXRange, yRange: finalYRange }
   }
 
   /**
