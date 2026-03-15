@@ -13,7 +13,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-[🚀 Quick Start](#-quick-start) · [✨ Features](#-features) · [📖 Documentation](#-architecture) · [🤝 Contributing](#-contributing)
+[🚀 Quick Start](#-quick-start) · [✨ Key Features](#-key-features) · [📖 Architecture](#-architecture) · [🤝 Contributing](#-contributing)
 
 ***
 
@@ -33,54 +33,43 @@
 
 EconGrapher is an AI economics assistant designed for **AP Micro & Macro Economics**. Ask questions, explore concepts, and generate interactive graphs through natural language conversations.
 
-## ✨ Features
+## ✨ Key Features
 
-<table>
-<tr>
-<td width="50%">
+### 🤖 AI-Powered Generation
+- **Natural Language Input** - Ask questions in plain English, just like talking to a TA
+- **Real-time Streaming** - Watch AI responses build live, no loading screens
+- **Thinking Process Visibility** - See the AI's reasoning step-by-step (supports DeepSeek R1, OpenAI o1 series, etc.)
+- **Thinking Model Detection** - Auto-detect and optimize for reasoning models
+- **Multi-Provider Support** - 12+ built-in providers and custom OpenAI-compatible endpoints
 
-### 🤖 AI Generation
+### 🔄 Message Branching
+- **Retry Generation** - Regenerate AI responses with one click
+- **Edit Messages** - Modify user messages and regenerate from that point
+- **Branch Navigation** - Switch between different versions of conversations
+- **Version History** - Keep track of all message variations
 
-- Natural language input
-- Real-time streaming responses
-- Thinking process visibility
-- Multi-provider support
+### 📐 Smart Geometric Engine
+- **Semantic Definitions** - Describe charts conceptually ("find intersection of supply and demand")
+- **Auto-Calculated Coordinates** - Mathematical computations handled automatically
+- **Intersection Detection** - Smart curve crossing point identification
+- **Projection Handling** - Automatic dashed lines to axes with labels
 
-</td>
-<td width="50%">
-
-### 📐 Geometric Primitives
-
-- Semantic chart definitions
-- Auto-calculated coordinates
-- Intersection detection
-- Projection handling
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 📊 Interactive Charts
-
-- Zoom & pan capabilities
-- Export to multiple formats
-- Responsive design
-- Plotly.js powered
-
-</td>
-<td width="50%">
+### 📊 Interactive Visualization
+- **Zoom & Pan** - Explore chart details with intuitive controls
+- **Plotly.js Powered** - Professional, publication-quality charts
+- **Analysis Cards** - Structured effect analysis alongside charts
+- **Responsive Design** - Perfect on desktop, tablet, and mobile devices
 
 ### 💾 Session Management
+- **Local Storage** - All data stays on your device, privacy-first
+- **Multiple Sessions** - Organize conversations by topic or chapter
+- **Chat History** - Full conversation preservation across sessions
+- **Quick Switching** - Seamlessly jump between different workspaces
 
-- Local conversation storage
-- Multiple sessions support
-- Chat history preservation
-- Quick session switching
-
-</td>
-</tr>
-</table>
+### 📤 Export & Debug
+- **Chat Export** - Export conversations as Markdown or JSON
+- **Debug Data** - Export raw HTTP requests for troubleshooting
+- **No Server Required** - 100% client-side, no backend needed
 
 ## 📚 Supported Charts
 
@@ -151,19 +140,30 @@ npm run dev
 
 ### Supported AI Providers
 
-| Provider                                                                                     | Endpoint                            | Models            |
-| -------------------------------------------------------------------------------------------- | ----------------------------------- | ----------------- |
-| ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat-square&logo=openai) | `api.openai.com/v1`                 | GPT-4, GPT-4o     |
-| ![Anthropic](https://img.shields.io/badge/Anthropic-D97757?style=flat-square)        | `api.anthropic.com/v1`              | Claude 3.5 Sonnet |
-| ![Google](https://img.shields.io/badge/Google-4285F4?style=flat-square&logo=google) | `generativelanguage.googleapis.com` | Gemini Pro        |
-| Custom                                                                                       | *Any OpenAI-compatible*             | *Varies*          |
+| Provider | Endpoint | Key Models |
+|----------|----------|------------|
+| **OpenAI** | `api.openai.com/v1` | GPT-5.4, GPT-4.1, o4, o4-mini |
+| **DeepSeek** | `api.deepseek.com/v1` | DeepSeek Chat, DeepSeek R1 (Reasoner) |
+| **Anthropic** | `api.anthropic.com/v1` | Claude 4 Sonnet, Claude 4 Opus |
+| **Google** | `generativelanguage.googleapis.com` | Gemini 3.1 Pro, Gemini 3.0 Flash |
+| **Azure OpenAI** | Custom | GPT-5.4, o4 |
+| **OpenRouter** | `openrouter.ai/api/v1` | Multi-provider gateway |
+| **Together AI** | `api.together.xyz/v1` | Llama 4, Qwen 3 |
+| **Groq** | `api.groq.com/openai/v1` | Llama 4 Scout, Qwen 3 |
+| **Mistral** | `api.mistral.ai/v1` | Mistral Neural 7B, Mistral Large 3 |
+| **Moonshot (Kimi)** | `api.moonshot.cn/v1` | Moonshot V2 |
+| **Zhipu (智谱)** | `open.bigmodel.cn/api/paas/v4` | GLM-5 Pro, GLM-5 Flash |
+| **Ollama (Local)** | `localhost:11434/v1` | Local LLMs |
+| **Custom** | *Any OpenAI-compatible* | *Varies* |
+
+
 
 ## 🎮 Usage
 
 ### Basic Commands
 
 ```bash
-/export [format]    # Export conversation (json/md/html)
+/export [format]    # Export conversation (json/markdown)
 /debug              # Export raw API request data
 ```
 
@@ -233,31 +233,57 @@ EconGrapher/
 ├── 📁 app/                      # Next.js App Router
 │   ├── page.tsx                 # Main application page
 │   ├── layout.tsx               # Root layout
-│   └── globals.css              # Global styles
+│   ├── globals.css              # Global styles
+│   └── test/                    # Test page
 │
 ├── 📁 components/
 │   ├── 📁 charts/               # Chart components
 │   │   ├── EconChart.tsx        # Main chart renderer
 │   │   ├── SingleChart.tsx      # Single chart wrapper
-│   │   └── 📁 builders/         # Chart builders
+│   │   ├── 📁 builders/         # Chart builders
+│   │   ├── 📁 layouts/          # Chart layouts
+│   │   └── 📁 constants/        # Colors and constants
 │   │
+│   ├── ChatArea.tsx             # Chat interface
+│   ├── ChatMessage.tsx          # Message component (with branching)
+│   ├── ChatInput.tsx            # Input component
+│   ├── SessionSidebar.tsx       # Session management
+│   ├── SettingsModal.tsx        # API settings
+│   ├── ThinkingBlock.tsx        # Thinking process display
+│   ├── AnalysisCard.tsx         # Effect analysis display
+│   ├── MarkdownRenderer.tsx     # Markdown rendering
 │   └── 📁 ui/                   # UI components (Radix)
 │       ├── button.tsx
 │       ├── dialog.tsx
+│       ├── input.tsx
 │       └── ...
 │
 ├── 📁 lib/
-│   ├── ai-service.ts            # AI provider integration
+│   ├── ai-service.ts            # AI streaming service
 │   ├── storage.ts               # LocalStorage management
+│   ├── export.ts                # Chat export functionality
+│   ├── types.ts                 # Core TypeScript types
+│   ├── model-presets.ts         # AI model presets
+│   ├── provider-detector.ts     # Provider auto-detection
+│   ├── provider-adapter.ts      # Provider format adapter
+│   ├── api-format-adapter.ts    # API format conversion
+│   ├── logger.ts                # Debug logging
+│   ├── utils.ts                 # Utility functions
 │   │
 │   └── 📁 rule-engine/          # Geometric primitive engine
+│       ├── primitive-engine.ts  # Core engine
 │       ├── 📁 curve-templates/  # Curve generation
-│       └── 📁 primitives/       # Point, line, area
+│       ├── 📁 primitives/       # Point, line, area resolvers
+│       └── 📁 utils/            # Geometry utilities
+│
+├── 📁 hooks/
+│   └── use-toast.ts             # Toast notification hook
 │
 ├── 📁 docs/                     # Documentation
 │   └── ai-chart-api-reference.md
 │
 └── 📁 types/                    # TypeScript definitions
+    └── plotly.js-dist-min.d.ts
 ```
 
 ## 🛠 Development

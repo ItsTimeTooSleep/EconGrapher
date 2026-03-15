@@ -48,15 +48,18 @@ export interface ProviderModelPresets {
 export const THINKING_MODEL_KEYWORDS = [
   'deepseek-reasoner',
   'deepseek-r1',
+  'deepseek-v4',
   'o1',
   'o1-mini',
   'o1-preview',
   'o3',
   'o3-mini',
+  'o4',
   'o4-mini',
   'reasoner',
   'r1',
-  'thinking'
+  'thinking',
+  'v4'
 ]
 
 /**
@@ -86,126 +89,118 @@ export const FAST_MODEL_KEYWORDS = [
  * OpenAI 模型预设
  */
 export const OPENAI_MODELS: ModelPreset[] = [
-  { id: 'gpt-4o', displayName: 'GPT-4o', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, recommended: true, description: 'Most capable model' },
+  { id: 'gpt-5.4', displayName: 'GPT-5.4', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, recommended: true, description: 'Latest flagship model' },
+  { id: 'gpt-4.1', displayName: 'GPT-4.1', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, description: 'Enhanced GPT-4 model' },
+  { id: 'gpt-4o', displayName: 'GPT-4o', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, description: 'Previous flagship' },
   { id: 'gpt-4o-mini', displayName: 'GPT-4o Mini', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, description: 'Fast and affordable' },
-  { id: 'gpt-4-turbo', displayName: 'GPT-4 Turbo', features: { isThinking: false, isVision: true, isFast: false, isReasoning: false }, description: 'Previous generation flagship' },
-  { id: 'gpt-4', displayName: 'GPT-4', features: { isThinking: false, isVision: false, isFast: false, isReasoning: false }, description: 'Original GPT-4' },
-  { id: 'gpt-3.5-turbo', displayName: 'GPT-3.5 Turbo', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'Fast and economical' },
-  { id: 'o1', displayName: 'o1', features: { isThinking: true, isVision: false, isFast: false, isReasoning: true }, description: 'Advanced reasoning' },
-  { id: 'o1-mini', displayName: 'o1 Mini', features: { isThinking: true, isVision: false, isFast: true, isReasoning: true }, description: 'Fast reasoning model' },
-  { id: 'o1-preview', displayName: 'o1 Preview', features: { isThinking: true, isVision: false, isFast: false, isReasoning: true }, description: 'Preview reasoning model' },
-  { id: 'o3-mini', displayName: 'o3 Mini', features: { isThinking: true, isVision: false, isFast: true, isReasoning: true }, recommended: true, description: 'Latest reasoning model' }
+  { id: 'o4', displayName: 'o4', features: { isThinking: true, isVision: false, isFast: false, isReasoning: true }, recommended: true, description: 'Latest reasoning model' },
+  { id: 'o4-mini', displayName: 'o4 Mini', features: { isThinking: true, isVision: false, isFast: true, isReasoning: true }, description: 'Fast reasoning model' },
+  { id: 'o3-mini', displayName: 'o3 Mini', features: { isThinking: true, isVision: false, isFast: true, isReasoning: true }, description: 'Previous reasoning model' }
 ]
 
 /**
  * DeepSeek 模型预设
  */
 export const DEEPSEEK_MODELS: ModelPreset[] = [
-  { id: 'deepseek-chat', displayName: 'DeepSeek Chat', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, recommended: true, description: 'General purpose chat' },
   { id: 'deepseek-reasoner', displayName: 'DeepSeek Reasoner (R1)', features: { isThinking: true, isVision: false, isFast: false, isReasoning: true }, recommended: true, description: 'Advanced reasoning model' },
-  { id: 'deepseek-r1', displayName: 'DeepSeek R1', features: { isThinking: true, isVision: false, isFast: false, isReasoning: true }, description: 'Reasoning model alias' },
-  { id: 'deepseek-coder', displayName: 'DeepSeek Coder', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'Code specialized model' }
+  { id: 'deepseek-chat', displayName: 'DeepSeek Chat', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'General purpose chat' }
 ]
 
 /**
  * Anthropic 模型预设
  */
 export const ANTHROPIC_MODELS: ModelPreset[] = [
-  { id: 'claude-3-5-sonnet-20241022', displayName: 'Claude 3.5 Sonnet', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, recommended: true, description: 'Latest Claude model' },
-  { id: 'claude-3-5-haiku-20241022', displayName: 'Claude 3.5 Haiku', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, description: 'Fast and efficient' },
-  { id: 'claude-3-opus-20240229', displayName: 'Claude 3 Opus', features: { isThinking: false, isVision: true, isFast: false, isReasoning: false }, description: 'Most powerful Claude' },
-  { id: 'claude-3-sonnet-20240229', displayName: 'Claude 3 Sonnet', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, description: 'Balanced performance' },
-  { id: 'claude-3-haiku-20240307', displayName: 'Claude 3 Haiku', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, description: 'Fast responses' }
+  { id: 'claude-4-opus', displayName: 'Claude 4 Opus', features: { isThinking: false, isVision: true, isFast: false, isReasoning: false }, recommended: true, description: 'Most powerful Claude' },
+  { id: 'claude-4-sonnet', displayName: 'Claude 4 Sonnet', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, recommended: true, description: 'Latest flagship model' },
+  { id: 'claude-4-haiku', displayName: 'Claude 4 Haiku', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, description: 'Fast and efficient' },
+  { id: 'claude-3-5-sonnet-20241022', displayName: 'Claude 3.5 Sonnet', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, description: 'Previous generation' }
 ]
 
 /**
  * Google 模型预设
  */
 export const GOOGLE_MODELS: ModelPreset[] = [
-  { id: 'gemini-2.0-flash', displayName: 'Gemini 2.0 Flash', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, recommended: true, description: 'Latest fast model' },
-  { id: 'gemini-1.5-pro', displayName: 'Gemini 1.5 Pro', features: { isThinking: false, isVision: true, isFast: false, isReasoning: false }, description: 'Long context model' },
-  { id: 'gemini-1.5-flash', displayName: 'Gemini 1.5 Flash', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, description: 'Fast and efficient' },
-  { id: 'gemini-1.5-flash-8b', displayName: 'Gemini 1.5 Flash 8B', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'Smaller, faster model' }
+  { id: 'gemini-3.1-pro', displayName: 'Gemini 3.1 Pro', features: { isThinking: false, isVision: true, isFast: false, isReasoning: false }, recommended: true, description: 'Most capable model' },
+  { id: 'gemini-3.0-flash', displayName: 'Gemini 3.0 Flash', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, recommended: true, description: 'Latest fast model' },
+  { id: 'gemini-2.0-flash', displayName: 'Gemini 2.0 Flash', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, description: 'Previous generation' },
+  { id: 'gemini-2.0-flash-lite', displayName: 'Gemini 2.0 Flash Lite', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, description: 'Lightweight version' }
 ]
 
 /**
  * Groq 模型预设
  */
 export const GROQ_MODELS: ModelPreset[] = [
-  { id: 'llama-3.3-70b-versatile', displayName: 'Llama 3.3 70B', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, recommended: true, description: 'Fast inference' },
-  { id: 'llama-3.1-70b-versatile', displayName: 'Llama 3.1 70B', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'Versatile model' },
-  { id: 'llama-3.1-8b-instant', displayName: 'Llama 3.1 8B', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'Ultra-fast responses' },
-  { id: 'mixtral-8x7b-32768', displayName: 'Mixtral 8x7B', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'Mixture of experts' },
-  { id: 'gemma2-9b-it', displayName: 'Gemma 2 9B', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'Google Gemma' }
+  { id: 'llama-4-scout-17b-16e-instruct', displayName: 'Llama 4 Scout 17B', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, recommended: true, description: 'Latest Llama model' },
+  { id: 'llama-3.3-70b-versatile', displayName: 'Llama 3.3 70B', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'Versatile model' },
+  { id: 'llama-3.1-70b-versatile', displayName: 'Llama 3.1 70B', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'Previous generation' },
+  { id: 'qwen-3-72b-instruct', displayName: 'Qwen 3 72B', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, description: 'Qwen vision model' }
 ]
 
 /**
  * Mistral 模型预设
  */
 export const MISTRAL_MODELS: ModelPreset[] = [
-  { id: 'mistral-large-latest', displayName: 'Mistral Large', features: { isThinking: false, isVision: false, isFast: false, isReasoning: false }, recommended: true, description: 'Flagship model' },
-  { id: 'mistral-small-latest', displayName: 'Mistral Small', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'Fast model' },
-  { id: 'codestral-latest', displayName: 'Codestral', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'Code specialized' },
-  { id: 'open-mistral-nemo', displayName: 'Mistral Nemo', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'Open model' }
+  { id: 'mistral-neural-7b', displayName: 'Mistral Neural 7B', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, recommended: true, description: 'Latest flagship model' },
+  { id: 'mistral-large-3', displayName: 'Mistral Large 3', features: { isThinking: false, isVision: true, isFast: false, isReasoning: false }, recommended: true, description: 'Powerful vision model' },
+  { id: 'codestral-mamba-2501', displayName: 'Codestral Mamba', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'Code specialized' }
 ]
 
 /**
  * Moonshot 模型预设
  */
 export const MOONSHOT_MODELS: ModelPreset[] = [
-  { id: 'moonshot-v1-8k', displayName: 'Moonshot V1 8K', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: '8K context' },
-  { id: 'moonshot-v1-32k', displayName: 'Moonshot V1 32K', features: { isThinking: false, isVision: false, isFast: false, isReasoning: false }, recommended: true, description: '32K context' },
-  { id: 'moonshot-v1-128k', displayName: 'Moonshot V1 128K', features: { isThinking: false, isVision: false, isFast: false, isReasoning: false }, description: '128K context' }
+  { id: 'moonshot-v2-32k', displayName: 'Moonshot V2 32K', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, recommended: true, description: 'Latest with vision' },
+  { id: 'moonshot-v2-128k', displayName: 'Moonshot V2 128K', features: { isThinking: false, isVision: true, isFast: false, isReasoning: false }, description: 'Long context vision' },
+  { id: 'moonshot-v1-32k', displayName: 'Moonshot V1 32K', features: { isThinking: false, isVision: false, isFast: false, isReasoning: false }, description: 'Previous generation' }
 ]
 
 /**
  * Zhipu 模型预设
  */
 export const ZHIPU_MODELS: ModelPreset[] = [
-  { id: 'glm-4-plus', displayName: 'GLM-4 Plus', features: { isThinking: false, isVision: false, isFast: false, isReasoning: false }, recommended: true, description: 'Enhanced GLM-4' },
-  { id: 'glm-4-0520', displayName: 'GLM-4', features: { isThinking: false, isVision: false, isFast: false, isReasoning: false }, description: 'Flagship model' },
-  { id: 'glm-4-air', displayName: 'GLM-4 Air', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'Fast model' },
-  { id: 'glm-4-flash', displayName: 'GLM-4 Flash', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, description: 'Ultra-fast model' }
+  { id: 'glm-5-pro', displayName: 'GLM-5 Pro', features: { isThinking: false, isVision: true, isFast: false, isReasoning: false }, recommended: true, description: 'Latest flagship model' },
+  { id: 'glm-5-flash', displayName: 'GLM-5 Flash', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, description: 'Fast vision model' },
+  { id: 'glm-4-plus', displayName: 'GLM-4 Plus', features: { isThinking: false, isVision: false, isFast: false, isReasoning: false }, description: 'Previous generation' }
 ]
 
 /**
  * OpenRouter 模型预设 (精选)
  */
 export const OPENROUTER_MODELS: ModelPreset[] = [
-  { id: 'openai/gpt-4o', displayName: 'GPT-4o (via OpenRouter)', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, recommended: true },
-  { id: 'anthropic/claude-3.5-sonnet', displayName: 'Claude 3.5 Sonnet', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false } },
-  { id: 'deepseek/deepseek-r1', displayName: 'DeepSeek R1', features: { isThinking: true, isVision: false, isFast: false, isReasoning: true } },
-  { id: 'google/gemini-2.0-flash-exp', displayName: 'Gemini 2.0 Flash', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false } },
-  { id: 'meta-llama/llama-3.3-70b-instruct', displayName: 'Llama 3.3 70B', features: { isThinking: false, isVision: false, isFast: false, isReasoning: false } }
+  { id: 'openai/gpt-5.4', displayName: 'GPT-5.4 (via OpenRouter)', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false }, recommended: true },
+  { id: 'openai/o4', displayName: 'o4 (via OpenRouter)', features: { isThinking: true, isVision: false, isFast: false, isReasoning: true } },
+  { id: 'anthropic/claude-4-sonnet', displayName: 'Claude 4 Sonnet', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false } },
+  { id: 'deepseek/deepseek-v4', displayName: 'DeepSeek V4', features: { isThinking: true, isVision: true, isFast: false, isReasoning: true } },
+  { id: 'google/gemini-3.1-pro', displayName: 'Gemini 3.1 Pro', features: { isThinking: false, isVision: true, isFast: false, isReasoning: false } }
 ]
 
 /**
  * Together AI 模型预设
  */
 export const TOGETHER_MODELS: ModelPreset[] = [
-  { id: 'meta-llama/Llama-3.3-70B-Instruct-Turbo', displayName: 'Llama 3.3 70B', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, recommended: true },
-  { id: 'deepseek-ai/DeepSeek-R1', displayName: 'DeepSeek R1', features: { isThinking: true, isVision: false, isFast: false, isReasoning: true } },
-  { id: 'Qwen/Qwen2.5-72B-Instruct-Turbo', displayName: 'Qwen 2.5 72B', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false } },
-  { id: 'mistralai/Mixtral-8x7B-Instruct-v0.1', displayName: 'Mixtral 8x7B', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false } }
+  { id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct', displayName: 'Llama 4 Scout 17B', features: { isThinking: false, isVision: false, isFast: true, isReasoning: false }, recommended: true },
+  { id: 'deepseek-ai/DeepSeek-V4', displayName: 'DeepSeek V4', features: { isThinking: true, isVision: true, isFast: false, isReasoning: true } },
+  { id: 'Qwen/Qwen3-72B-Instruct', displayName: 'Qwen 3 72B', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false } },
+  { id: 'mistralai/Mistral-Neural-7B', displayName: 'Mistral Neural 7B', features: { isThinking: false, isVision: true, isFast: true, isReasoning: false } }
 ]
 
 /**
  * 提供商模型预设映射
  */
 export const PROVIDER_MODEL_PRESETS: Record<ApiProvider, ProviderModelPresets> = {
-  openai: { provider: 'openai', models: OPENAI_MODELS, defaultModel: 'gpt-4o' },
-  deepseek: { provider: 'deepseek', models: DEEPSEEK_MODELS, defaultModel: 'deepseek-chat' },
-  anthropic: { provider: 'anthropic', models: ANTHROPIC_MODELS, defaultModel: 'claude-3-5-sonnet-20241022' },
-  google: { provider: 'google', models: GOOGLE_MODELS, defaultModel: 'gemini-2.0-flash' },
-  azure: { provider: 'azure', models: OPENAI_MODELS, defaultModel: 'gpt-4o' },
-  openrouter: { provider: 'openrouter', models: OPENROUTER_MODELS, defaultModel: 'openai/gpt-4o' },
-  together: { provider: 'together', models: TOGETHER_MODELS, defaultModel: 'meta-llama/Llama-3.3-70B-Instruct-Turbo' },
-  groq: { provider: 'groq', models: GROQ_MODELS, defaultModel: 'llama-3.3-70b-versatile' },
-  mistral: { provider: 'mistral', models: MISTRAL_MODELS, defaultModel: 'mistral-large-latest' },
-  moonshot: { provider: 'moonshot', models: MOONSHOT_MODELS, defaultModel: 'moonshot-v1-32k' },
-  zhipu: { provider: 'zhipu', models: ZHIPU_MODELS, defaultModel: 'glm-4-plus' },
-  ollama: { provider: 'ollama', models: [], defaultModel: 'llama3.2' },
-  unknown: { provider: 'unknown', models: [], defaultModel: 'gpt-4o' }
+  openai: { provider: 'openai', models: OPENAI_MODELS, defaultModel: 'gpt-5.4' },
+  deepseek: { provider: 'deepseek', models: DEEPSEEK_MODELS, defaultModel: 'deepseek-v4' },
+  anthropic: { provider: 'anthropic', models: ANTHROPIC_MODELS, defaultModel: 'claude-4-sonnet' },
+  google: { provider: 'google', models: GOOGLE_MODELS, defaultModel: 'gemini-3.0-flash' },
+  azure: { provider: 'azure', models: OPENAI_MODELS, defaultModel: 'gpt-5.4' },
+  openrouter: { provider: 'openrouter', models: OPENROUTER_MODELS, defaultModel: 'openai/gpt-5.4' },
+  together: { provider: 'together', models: TOGETHER_MODELS, defaultModel: 'meta-llama/Llama-4-Scout-17B-16E-Instruct' },
+  groq: { provider: 'groq', models: GROQ_MODELS, defaultModel: 'llama-4-scout-17b-16e-instruct' },
+  mistral: { provider: 'mistral', models: MISTRAL_MODELS, defaultModel: 'mistral-neural-7b' },
+  moonshot: { provider: 'moonshot', models: MOONSHOT_MODELS, defaultModel: 'moonshot-v2-32k' },
+  zhipu: { provider: 'zhipu', models: ZHIPU_MODELS, defaultModel: 'glm-5-pro' },
+  ollama: { provider: 'ollama', models: [], defaultModel: 'llama4' },
+  unknown: { provider: 'unknown', models: [], defaultModel: 'gpt-5.4' }
 }
 
 /**
