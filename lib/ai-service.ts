@@ -473,6 +473,61 @@ Areas are defined by listing point IDs in order (clockwise or counter-clockwise)
    - Which points are the actual vertices of this shape?
    - Are the points in proper order around the boundary?
 
+### Tax Incidence and Deadweight Loss (DWL) - CRITICAL
+
+**When drawing tax graphs, follow these exact rules:**
+
+#### Tax Revenue (Rectangle)
+- **What it is**: The tax revenue collected by the government. It's a rectangle representing the tax per unit times the quantity sold.
+- **Vertices (4 points, in order)**:
+  1. Top-left: Pc on y-axis (consumer price after tax)
+  2. Top-right: E_tax (new equilibrium after tax, at (Qt, Pc))
+  3. Bottom-right: Pp (producer price on supply curve at Qt, at (Qt, Pp))
+  4. Bottom-left: Pp on y-axis (producer price)
+- **Correct points array**: \`["Pc", "E_tax", "Pp", "Pp_y"]\`
+- **COMMON MISTAKE TO AVOID**: DO NOT use \`["Pc_y", "Pp_y", "Pp", "Pc"]\` - Pc and Pc_y are the same point (both on y-axis), this creates only 3 unique points!
+
+#### Deadweight Loss (DWL) - Triangle
+- **What it is**: The loss of economic efficiency due to the tax. It's the triangle of surplus that no one gets.
+- **Vertices (3 points)**:
+  1. E (original equilibrium, before tax)
+  2. E_tax (new equilibrium, after tax)
+  3. Pp (point on supply curve at Qt, at (Qt, Pp))
+- **Correct points array**: \`["E", "E_tax", "Pp"]\`
+- **COMMON MISTAKE TO AVOID**: DO NOT use \`["E", "Pc", "Pp"]\` - Pc is on y-axis, which creates the wrong triangle!
+
+**Complete Tax Example Points Setup:**
+\`\`\`json
+"points": [
+  { "id": "E", "definition": { "type": "intersection", "curve1": "D", "curve2": "S" }, "label": "E", "showMarker": true },
+  { "id": "E_tax", "definition": { "type": "intersection", "curve1": "D", "curve2": "S_tax" }, "label": "E'", "showMarker": true },
+  { "id": "Pc", "definition": { "type": "projectY", "from": "E_tax" } },
+  { "id": "Pp", "definition": { "type": "onCurveAtPointX", "curve": "S", "from": "E_tax" } },
+  { "id": "Qe", "definition": { "type": "projectX", "from": "E" } },
+  { "id": "Qt", "definition": { "type": "projectX", "from": "E_tax" } },
+  { "id": "Pe", "definition": { "type": "projectY", "from": "E" } },
+  { "id": "Pp_y", "definition": { "type": "projectY", "from": "Pp" } }
+]
+\`\`\`
+
+**Correct Area Definitions for Tax Graph:**
+\`\`\`json
+"areas": [
+  {
+    "points": ["Pc", "E_tax", "Pp", "Pp_y"],
+    "color": "rgba(139, 92, 246, 0.3)",
+    "label": "Tax Revenue",
+    "opacity": 0.3
+  },
+  {
+    "points": ["E", "E_tax", "Pp"],
+    "color": "rgba(239, 68, 68, 0.3)",
+    "label": "DWL",
+    "opacity": 0.3
+  }
+]
+\`\`\`
+
 ## Axis Label Definitions
 
 Add labels on axes at specific point positions:
