@@ -44,8 +44,8 @@ const EXTENDED_RANGE = {
 /**
  * 生成线性曲线的点集
  * 
- * 使用极大范围生成点，实现曲线"无限延长"效果。
- * 用户缩放图表时，曲线始终可见。
+ * 使用一个合理范围（而非极大范围）生成点，确保曲线在 Plotly 中正确渲染。
+ * 用户缩放图表时，Plotly 会自动处理曲线的"无限延长"效果。
  * 
  * @param template - 线性曲线模板
  * @returns 点集数组
@@ -53,16 +53,16 @@ const EXTENDED_RANGE = {
 export function generateLinearPoints(template: LinearCurveTemplate): Point[] {
   const { slope, intercept } = template
   const points: Point[] = []
-  const steps = 200
+  
+  // 使用更合理的范围，避免极端值导致的 Plotly 渲染问题
+  const minX = -10
+  const maxX = 30
+  const steps = 100
   
   for (let i = 0; i <= steps; i++) {
-    const x = EXTENDED_RANGE.minX + (i / steps) * (EXTENDED_RANGE.maxX - EXTENDED_RANGE.minX)
+    const x = minX + (i / steps) * (maxX - minX)
     const y = slope * x + intercept
-    
-    // 只保留 Y 值在合理范围内的点
-    if (y >= EXTENDED_RANGE.minY && y <= EXTENDED_RANGE.maxY) {
-      points.push({ x, y })
-    }
+    points.push({ x, y })
   }
   
   return points

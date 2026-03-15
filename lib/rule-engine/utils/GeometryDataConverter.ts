@@ -66,8 +66,11 @@ interface PlotlyAnnotation {
   arrowhead?: number
   arrowcolor?: string
   arrowsize?: number
+  arrowwidth?: number
   ax?: number
   ay?: number
+  axref?: string
+  ayref?: string
   font?: {
     color?: string
     size?: number
@@ -209,7 +212,9 @@ export class GeometryDataConverter {
       }
     })
 
+    console.log('[DEBUG] convert - Adding shaded areas, count:', geometryData.shadedAreas.length)
     geometryData.shadedAreas.forEach(area => {
+      console.log('[DEBUG] convert - Processing shaded area:', area.label)
       traces.push(this.convertShadedArea(area))
     })
 
@@ -263,11 +268,26 @@ export class GeometryDataConverter {
     })
 
     geometryData.arrows.forEach(arrow => {
-      const { trace, annotation } = this.convertArrow(arrow)
-      traces.push(trace)
-      if (annotation) {
-        annotations.push(annotation)
+      const { traces: arrowTraces, arrowAnnotation, labelAnnotation } = this.convertArrow(arrow)
+      traces.push(...arrowTraces)
+      if (arrowAnnotation) {
+        annotations.push(arrowAnnotation)
       }
+      if (labelAnnotation) {
+        annotations.push(labelAnnotation)
+      }
+    })
+
+    console.log('[DEBUG] convert - All traces generated, total:', traces.length)
+    traces.forEach((trace, index) => {
+      console.log(`[DEBUG] convert - Trace ${index}:`, {
+        name: (trace as any).name,
+        type: trace.type,
+        x: trace.x?.slice(0, 10),
+        y: trace.y?.slice(0, 10),
+        line: (trace as any).line,
+        color: (trace as any).line?.color
+      })
     })
 
     const viewport = this.calculateViewport(geometryData)
@@ -728,14 +748,24 @@ export class GeometryDataConverter {
       return null
     }
 
-    const lastIndex = curve.points.length - 1
-    const endPoint = curve.points[lastIndex]
+    // 找到在可见范围内最右侧的点，标签应放在那里
+    const validPoints = curve.points.filter(p => 
+      p.x >= -5 && p.x <= 25 && p.y >= -5 && p.y <= 25
+    )
+    
+    if (validPoints.length === 0) {
+      return null
+    }
+    
+    // 按 X 坐标从大到小排序，找到最右边的点
+    const sortedByX = [...validPoints].sort((a, b) => b.x - a.x)
+    const endPoint = sortedByX[0]
     
     const labelOffset = 0.3
     
     return {
       x: endPoint.x + labelOffset,
-      y: endPoint.y + labelOffset,
+      y: endPoint.y,
       xref: 'x',
       yref: 'y',
       text: curve.label,
@@ -748,12 +778,13 @@ export class GeometryDataConverter {
       bgcolor: 'rgba(255,255,255,0.95)',
       borderpad: 4,
       xanchor: 'left',
-      yanchor: 'bottom'
+      yanchor: 'middle'
     }
   }
 
   private convertShadedArea(area: ShadedAreaGeometry): PlotlyTrace {
-    return {
+    console.log('[DEBUG] convertShadedArea - START area:', JSON.stringify(area, null, 2))
+    const trace = {
       x: area.points.map(p => p.x),
       y: area.points.map(p => p.y),
       type: 'scatter',
@@ -766,6 +797,8 @@ export class GeometryDataConverter {
       name: area.label || '',
       hoverinfo: 'name'
     }
+    console.log('[DEBUG] convertShadedArea - END trace:', { name: trace.name, x: trace.x, y: trace.y, color: area.color })
+    return trace
   }
 
   private convertBrace(brace: BraceGeometry): {
@@ -885,79 +918,64 @@ export class GeometryDataConverter {
   /**
    * 转换箭头几何数据为 Plotly 格式
    * 
-   * 使用 SVG path 绘制箭头，包括箭头线和箭头头部。
+   * 简单直接的箭头绘制，避免多余线条
    * 
    * @param arrow - 箭头几何数据
    * @returns 包含 trace 和可选 annotation 的对象
    */
   private convertArrow(arrow: ArrowGeometry): {
-    trace: PlotlyTrace
-    annotation: PlotlyAnnotation | null
+    traces: PlotlyTrace[]
+    arrowAnnotation: PlotlyAnnotation | null
+    labelAnnotation: PlotlyAnnotation | null
   } {
+    console.log('[DEBUG] convertArrow - START arrow:', JSON.stringify(arrow, null, 2))
+    
     const dx = arrow.endX - arrow.startX
     const dy = arrow.endY - arrow.startY
     const length = Math.sqrt(dx * dx + dy * dy)
+    console.log('[DEBUG] convertArrow - length:', length)
     
     if (length < 0.01) {
+      console.log('[DEBUG] convertArrow - too short, returning empty')
       return {
-        trace: {
-          x: [arrow.startX],
-          y: [arrow.startY],
-          type: 'scatter',
-          mode: 'lines',
-          line: { color: arrow.color, width: arrow.lineWidth },
-          showlegend: false,
-          hoverinfo: 'none'
-        },
-        annotation: null
+        traces: [],
+        arrowAnnotation: null,
+        labelAnnotation: null
       }
     }
     
     const unitX = dx / length
     const unitY = dy / length
+    console.log('[DEBUG] convertArrow - unit:', { unitX, unitY })
     
-    const headSize = arrow.headSize
-    const headAngle = Math.PI / 6
+    const padding = 0.3
+    const adjustedStartX = arrow.startX + unitX * padding
+    const adjustedStartY = arrow.startY + unitY * padding
+    const adjustedEndX = arrow.endX - unitX * padding
+    const adjustedEndY = arrow.endY - unitY * padding
+    console.log('[DEBUG] convertArrow - adjusted:', { adjustedStartX, adjustedStartY, adjustedEndX, adjustedEndY })
     
-    const headBaseX = arrow.endX - unitX * headSize * 0.8
-    const headBaseY = arrow.endY - unitY * headSize * 0.8
+    const traces: PlotlyTrace[] = []
     
-    const perpX = -unitY
-    const perpY = unitX
-    
-    const headWidth = headSize * Math.tan(headAngle)
-    const headLeftX = headBaseX + perpX * headWidth
-    const headLeftY = headBaseY + perpY * headWidth
-    const headRightX = headBaseX - perpX * headWidth
-    const headRightY = headBaseY - perpY * headWidth
-    
-    const trace: PlotlyTrace = {
-      x: [
-        arrow.startX,
-        headBaseX,
-        arrow.endX,
-        headBaseX,
-        headLeftX,
-        headBaseX,
-        headRightX
-      ],
-      y: [
-        arrow.startY,
-        headBaseY,
-        arrow.endY,
-        headBaseY,
-        headLeftY,
-        headBaseY,
-        headRightY
-      ],
-      type: 'scatter',
-      mode: 'lines',
-      line: { color: arrow.color, width: arrow.lineWidth },
-      showlegend: false,
-      hoverinfo: 'none'
+    const arrowAnnotation: PlotlyAnnotation = {
+      x: adjustedEndX,
+      y: adjustedEndY,
+      xref: 'x',
+      yref: 'y',
+      ax: adjustedStartX,
+      ay: adjustedStartY,
+      axref: 'x',
+      ayref: 'y',
+      showarrow: true,
+      arrowcolor: arrow.color,
+      arrowwidth: arrow.lineWidth * 2,
+      arrowhead: 2,
+      arrowsize: 1.2,
+      text: '',
+      font: { size: 1 }
     }
     
-    let annotation: PlotlyAnnotation | null = null
+    let labelAnnotation: PlotlyAnnotation | null = null
     if (arrow.label) {
       let labelX: number
       let labelY: number
@@ -966,42 +984,47 @@ export class GeometryDataConverter {
       
       switch (arrow.labelPosition) {
         case 'start':
-          labelX = arrow.startX
-          labelY = arrow.startY
+          labelX = adjustedStartX - unitX * 0.5
+          labelY = adjustedStartY - unitY * 0.5
           xanchor = unitX < -0.3 ? 'right' : unitX > 0.3 ? 'left' : 'center'
           yanchor = unitY < -0.3 ? 'bottom' : unitY > 0.3 ? 'top' : 'middle'
           break
         case 'end':
-          labelX = arrow.endX
-          labelY = arrow.endY
+          labelX = adjustedEndX + unitX * 0.5
+          labelY = adjustedEndY + unitY * 0.5
           xanchor = unitX < -0.3 ? 'left' : unitX > 0.3 ? 'right' : 'center'
           yanchor = unitY < -0.3 ? 'top' : unitY > 0.3 ? 'bottom' : 'middle'
           break
         case 'middle':
         default:
-          labelX = (arrow.startX + arrow.endX) / 2
-          labelY = (arrow.startY + arrow.endY) / 2
+          labelX = (adjustedStartX + adjustedEndX) / 2
+          labelY = (adjustedStartY + adjustedEndY) / 2
           xanchor = 'center'
           yanchor = 'middle'
           break
       }
       
-      annotation = {
+      labelAnnotation = {
         x: labelX,
         y: labelY,
         xref: 'x',
         yref: 'y',
         text: arrow.label,
         showarrow: false,
-        font: { color: arrow.color, size: 11, weight: 'bold' },
-        bgcolor: 'rgba(255,255,255,0.9)',
-        borderpad: 3,
+        font: { 
+          color: arrow.color, 
+          size: 11, 
+          weight: 'bold' 
+        },
+        bgcolor: 'rgba(255,255,255,0.95)',
+        borderpad: 4,
         xanchor,
         yanchor
       }
     }
     
-    return { trace, annotation }
+    console.log('[DEBUG] convertArrow - END, using Plotly annotation arrow')
+    return { traces, arrowAnnotation, labelAnnotation }
   }
 
   private createAxisLabelAnnotation(
