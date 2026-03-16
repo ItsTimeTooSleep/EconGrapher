@@ -82,6 +82,7 @@ interface ChartData {
 | `pointSet`   | 自定义点集    | PPC、洛伦兹曲线         |
 | `derivedMR`  | 派生边际收益   | 从需求曲线派生 MR        |
 | `derivedMFC` | 派生边际要素成本 | 从供给曲线派生 MFC       |
+| `ampleReserve` | Ample Reserve 曲线 | 银行准备金市场的准备金供给曲线 |
 
 ### 3.2 线性曲线 (linear)
 
@@ -268,6 +269,43 @@ interface DerivedMFCCurveDefinition {
   color?: string       // 颜色
   dashed?: boolean     // 是否虚线
   lineWidth?: number   // 线条宽度
+}
+```
+
+### 3.10 Ample Reserve 曲线 (ampleReserve)
+
+用于银行准备金市场的准备金需求曲线，形状包含三个部分：
+- 天花板区域（左侧）：水平线，保持在贴现率（discountRate）
+- 中间区域：向下倾斜，从贴现率下降到 IOER（kinkY）
+- 地板区域（右侧）：水平线，保持在 IOER（kinkY）
+
+```typescript
+interface AmpleReserveCurveDefinition {
+  id: string           // 曲线唯一标识符（必需）
+  label: string        // 显示标签（必需）
+  type: 'ampleReserve' // 类型标识（必需）
+  kinkX: number        // 拐点 X 坐标（准备金充足点，向下倾斜与地板的交点，必需）
+  kinkY: number        // 拐点 Y 坐标（IOER 利率，地板利率，必需）
+  discountRate: number // 贴现率（上限利率，天花板，必需）
+  leftSlope?: number   // 拐点左侧的斜率（稀缺区域，已废弃，保留用于兼容性）
+  flatY?: number       // 平坦部分的 Y 值（充足区域，可选，默认等于 kinkY）
+  color?: string       // 颜色
+  dashed?: boolean     // 是否虚线
+  lineWidth?: number   // 线条宽度
+}
+```
+
+**示例**：
+
+```json
+{ 
+  "id": "Demand", 
+  "label": "Demand", 
+  "type": "ampleReserve", 
+  "kinkX": 8, 
+  "kinkY": 2, 
+  "discountRate": 4,
+  "color": "#3b82f6" 
 }
 ```
 
@@ -758,6 +796,96 @@ interface AxisLabelDefinition {
   ]
 }
 ```
+
+### 10.5 Ample Reserve 模型（准备金市场）
+
+**重要说明：** Ample Reserve 模型展示银行准备金市场，包含：
+- 需求曲线：使用 `ampleReserve` 类型，包含天花板和地板
+- 供给曲线：使用 `vertical` 类型，表示准备金总量
+- 贴现率（Discount Rate）和 IORB（Interest on Reserve Balances）作为独立的水平线展示
+
+```json
+{
+  "type": "chart",
+  "title": "Ample Reserve Model",
+  "xLabel": "Reserves",
+  "yLabel": "Federal Funds Rate",
+  "xRange": [0, 12],
+  "yRange": [0, 6],
+  "curves": [
+    {
+      "id": "Demand",
+      "label": "Demand",
+      "type": "ampleReserve",
+      "kinkX": 8,
+      "kinkY": 2,
+      "discountRate": 4
+    },
+    {
+      "id": "Supply",
+      "label": "Supply",
+      "type": "vertical",
+      "x": 10
+    },
+    {
+      "id": "DiscountRate",
+      "label": "Discount Rate",
+      "type": "horizontal",
+      "y": 4,
+      "dashed": true
+    },
+    {
+      "id": "IORB",
+      "label": "IORB",
+      "type": "horizontal",
+      "y": 2,
+      "dashed": true
+    }
+  ],
+  "points": [
+    {
+      "id": "E",
+      "definition": { "type": "intersection", "curve1": "Demand", "curve2": "Supply" },
+      "label": "E",
+      "showMarker": true
+    },
+    {
+      "id": "i",
+      "definition": { "type": "projectY", "from": "E" }
+    },
+    {
+      "id": "R",
+      "definition": { "type": "projectX", "from": "E" }
+    },
+    {
+      "id": "Kink",
+      "definition": { "type": "fixed", "x": 8, "y": 2 }
+    }
+  ],
+  "lines": [
+    { "definition": { "type": "dashedToX", "from": "E" } },
+    { "definition": { "type": "dashedToY", "from": "E" } }
+  ],
+  "axisLabels": [
+    { "point": "R", "axis": "x", "label": "R*" },
+    { "point": "i", "axis": "y", "label": "i*" },
+    { "point": "Kink", "axis": "x", "label": "Ample" }
+  ]
+}
+```
+
+**关键点说明：**
+- `Demand`: 使用 `ampleReserve` 类型的需求曲线
+- `Supply`: 垂直的准备金供给曲线
+- `Discount Rate`: 独立的水平线（天花板）
+- `IORB`: 独立的水平线（地板）
+- `E`: 需求曲线与供给曲线的交点（均衡点）
+- 虚线从均衡点延伸到坐标轴，便于读取利率和准备金数量
+
+**展示 Shift（移动）：**
+- 要展示贴现率变化（Shift），修改 `Discount Rate` 曲线的 `y` 值
+- 要展示 IORB 变化（Shift），修改 `IORB` 曲线的 `y` 值和 `Demand` 曲线的 `kinkY` 值
+- 要展示准备金供给变化，修改 `Supply` 曲线的 `x` 值
 
 ***
 

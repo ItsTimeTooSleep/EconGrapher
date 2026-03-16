@@ -24,6 +24,7 @@ export type CurveTemplateType =
   | 'derivedMR'        // 从需求曲线派生的 MR 曲线
   | 'derivedMFC'       // 从供给曲线派生的 MFC 曲线
   | 'derivedATC'       // 从 AVC 和 AFC 派生的 ATC 曲线（ATC = AVC + AFC）
+  | 'ampleReserve'     // Ample Reserve 曲线（银行准备金市场的准备金供给曲线）
 
 /**
  * 基础曲线模板接口
@@ -177,6 +178,29 @@ export interface DerivedATCCurveTemplate extends BaseCurveTemplate {
 }
 
 /**
+ * Ample Reserve 曲线模板
+ * 用于银行准备金市场的准备金需求曲线
+ * 形状：
+ * - 天花板区域（左侧）：水平线，保持在贴现率（discountRate）
+ * - 中间区域：向下倾斜，从贴现率下降到 IOER（kinkY）
+ * - 地板区域（右侧）：水平线，保持在 IOER（kinkY）
+ * 
+ * @property kinkX - 拐点 X 坐标（准备金充足点，向下倾斜与地板的交点）
+ * @property kinkY - 拐点 Y 坐标（IOER 利率，地板利率）
+ * @property discountRate - 贴现率（上限利率，天花板）
+ * @property leftSlope - 拐点左侧的斜率（稀缺区域，已废弃，保留用于兼容性）
+ * @property flatY - 平坦部分的 Y 值（充足区域，默认等于 kinkY）
+ */
+export interface AmpleReserveCurveTemplate extends BaseCurveTemplate {
+  type: 'ampleReserve'
+  kinkX: number
+  kinkY: number
+  discountRate: number
+  leftSlope?: number
+  flatY?: number
+}
+
+/**
  * 曲线模板联合类型
  */
 export type CurveTemplate = 
@@ -190,6 +214,7 @@ export type CurveTemplate =
   | DerivedMRCurveTemplate
   | DerivedMFCCurveTemplate
   | DerivedATCCurveTemplate
+  | AmpleReserveCurveTemplate
 
 /**
  * 二次曲线方程参数

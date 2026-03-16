@@ -26,6 +26,7 @@ import type {
   DerivedMRCurveTemplate,
   DerivedMFCCurveTemplate,
   DerivedATCCurveTemplate,
+  AmpleReserveCurveTemplate,
   ResolvedCurve
 } from './types'
 import { DEFAULT_CURVE_STYLE, getCurveColor } from './types'
@@ -243,6 +244,96 @@ export function generateHorizontalLinePoints(template: HorizontalLineTemplate): 
 }
 
 /**
+ * Ample Reserve 曲线生成结果
+ */
+interface AmpleReserveResult {
+  points: Point[]
+  equation: { 
+    kinkX: number
+    kinkY: number
+    discountRate: number
+    leftSlope: number
+    flatY: number
+  }
+}
+
+/**
+ * 生成 Ample Reserve 曲线的点集
+ * 
+ * 银行准备金市场的准备金需求曲线，形状：
+ * - 天花板区域（左侧）：水平线，保持在贴现率（discountRate）
+ * - 中间区域：向下倾斜，从贴现率下降到 IOER（kinkY）
+ * - 地板区域（右侧）：水平线，保持在 IOER（kinkY）
+ * 
+ * @param template - Ample Reserve 曲线模板
+ * @returns 点集数组和方程参数
+ */
+export function generateAmpleReservePoints(template: AmpleReserveCurveTemplate): AmpleReserveResult {
+  const { 
+    kinkX, 
+    kinkY, 
+    discountRate, 
+    leftSlope = -0.5,
+    flatY
+  } = template
+  
+  const points: Point[] = []
+  const flatYValue = flatY !== undefined ? flatY : kinkY
+  
+  // 第一部分：天花板区域（左侧水平线，贴现率）
+  const ceilingSteps = 25
+  const ceilingStartX = 0
+  const ceilingEndX = kinkX * 0.3
+  
+  for (let i = 0; i <= ceilingSteps; i++) {
+    const x = ceilingStartX + (i / ceilingSteps) * (ceilingEndX - ceilingStartX)
+    const y = discountRate
+    if (y >= 0) {
+      points.push({ x, y })
+    }
+  }
+  
+  // 第二部分：中间向下倾斜区域（从贴现率到 IOER）
+  const middleSteps = 50
+  const middleStartX = ceilingEndX
+  const middleEndX = kinkX
+  
+  for (let i = 0; i <= middleSteps; i++) {
+    const x = middleStartX + (i / middleSteps) * (middleEndX - middleStartX)
+    // 从贴现率线性下降到 IOER
+    const t = i / middleSteps
+    const y = discountRate * (1 - t) + kinkY * t
+    if (y >= 0) {
+      points.push({ x, y })
+    }
+  }
+  
+  // 第三部分：地板区域（右侧水平线，IOER）
+  const floorSteps = 50
+  const floorStartX = kinkX
+  const floorEndX = 30
+  
+  for (let i = 0; i <= floorSteps; i++) {
+    const x = floorStartX + (i / floorSteps) * (floorEndX - floorStartX)
+    const y = flatYValue
+    if (y >= 0) {
+      points.push({ x, y })
+    }
+  }
+  
+  return { 
+    points, 
+    equation: { 
+      kinkX, 
+      kinkY, 
+      discountRate, 
+      leftSlope, 
+      flatY: flatYValue 
+    } 
+  }
+}
+
+/**
  * 解析曲线模板，生成 ResolvedCurve
  * 
  * 这是曲线模板的主要入口函数。
@@ -318,6 +409,13 @@ export function resolveCurve(
     case 'derivedATC':
       points = generateDerivedATCPoints(template, resolvedCurves)
       break
+      
+    case 'ampleReserve': {
+      const result = generateAmpleReservePoints(template)
+      points = result.points
+      equation = { ampleReserve: result.equation } as any
+      break
+    }
       
     default:
       throw new Error(`Unknown curve template type: ${(template as CurveTemplate).type}`)

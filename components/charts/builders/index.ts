@@ -180,6 +180,17 @@ function convertCurves(curves: CurveDefinition[]): CurveTemplate[] {
           startX: curve.startX
         }
         
+      case 'ampleReserve':
+        return {
+          ...base,
+          type: 'ampleReserve' as const,
+          kinkX: curve.kinkX!,
+          kinkY: curve.kinkY!,
+          discountRate: curve.discountRate!,
+          leftSlope: curve.leftSlope,
+          flatY: curve.flatY
+        }
+        
       default:
         throw new Error(`Unknown curve type: ${(curve as CurveDefinition).type}`)
     }

@@ -72,6 +72,11 @@ export interface CurveDefinition {
   h?: number
   v?: number
   startX?: number
+  kinkX?: number
+  kinkY?: number
+  discountRate?: number
+  leftSlope?: number
+  flatY?: number
 }
 
 /**
@@ -88,6 +93,7 @@ export type CurveType =
   | 'derivedMR'
   | 'derivedMFC'
   | 'derivedATC'
+  | 'ampleReserve'
 
 /**
  * 点定义

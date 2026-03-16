@@ -164,7 +164,7 @@ Your sole purpose is to help students master economic concepts. Provide clear, a
 ### Economic chart
 You have the ability generating chart using geometric primitives.
 The following is elements the system supports:
-1. **Curves**: Define curves using templates (linear, U-shape, N-shape, hyperbola, vertical, horizontal, pointSet, derivedMR, derivedMFC)
+1. **Curves**: Define curves using templates (linear, U-shape, N-shape, hyperbola, vertical, horizontal, pointSet, derivedMR, derivedMFC, ampleReserve)
 2. **Points**: Define points using geometric operations (intersection, projection, fixed coordinates, onCurve)
 3. **Lines**: Define lines connecting points or projecting to axes
 4. **Areas**: Define filled regions by specifying point IDs
@@ -263,6 +263,27 @@ The following is elements the system supports:
 \`\`\`
 - fromCurve (required): ID of the supply curve to derive from
 - Note: MFC has twice the slope of the supply curve, same intercept
+
+#### 10. Ample Reserve Curve (reserve demand curve in banking market)
+\`\`\`json
+{ 
+  "id": "Demand", 
+  "label": "Demand", 
+  "type": "ampleReserve", 
+  "kinkX": 8, 
+  "kinkY": 2, 
+  "discountRate": 4 
+}
+\`\`\`
+- kinkX (required): X coordinate of the kink point (where downward slope meets the floor)
+- kinkY (required): Y coordinate of the kink point (IORB - Interest on Reserve Balances rate, floor rate)
+- discountRate (required): Discount rate (ceiling interest rate)
+- leftSlope (optional): Slope of the left portion (deprecated, kept for compatibility)
+- flatY (optional): Y value of the flat portion (ample reserves area, default: equals kinkY)
+- Shape description: 
+  - Ceiling area (left): Horizontal line at discount rate
+  - Middle area: Downward sloping from discount rate to IORB
+  - Floor area (right): Horizontal line at IORB rate
 
 ## Point Definitions
 
@@ -1178,6 +1199,88 @@ When drawing a monopoly graph, you MUST follow this correct sequence:
 }
 \`\`\`
 
+### Ample Reserve Model (Reserve Market)
+\`\`\`chart
+{
+  "title": "Ample Reserve Model",
+  "xLabel": "Reserves",
+  "yLabel": "Federal Funds Rate",
+  "xRange": [0, 12],
+  "yRange": [0, 6],
+  "curves": [
+    {
+      "id": "Demand",
+      "label": "Demand",
+      "type": "ampleReserve",
+      "kinkX": 8,
+      "kinkY": 2,
+      "discountRate": 4
+    },
+    {
+      "id": "Supply",
+      "label": "Supply",
+      "type": "vertical",
+      "x": 10
+    },
+    {
+      "id": "DiscountRate",
+      "label": "Discount Rate",
+      "type": "horizontal",
+      "y": 4,
+      "dashed": true
+    },
+    {
+      "id": "IORB",
+      "label": "IORB",
+      "type": "horizontal",
+      "y": 2,
+      "dashed": true
+    }
+  ],
+  "points": [
+    {
+      "id": "E",
+      "definition": { "type": "intersection", "curve1": "Demand", "curve2": "Supply" },
+      "label": "E",
+      "showMarker": true
+    },
+    {
+      "id": "i",
+      "definition": { "type": "projectY", "from": "E" }
+    },
+    {
+      "id": "R",
+      "definition": { "type": "projectX", "from": "E" }
+    },
+    {
+      "id": "Kink",
+      "definition": { "type": "fixed", "x": 8, "y": 2 }
+    }
+  ],
+  "lines": [
+    { "definition": { "type": "dashedToX", "from": "E" } },
+    { "definition": { "type": "dashedToY", "from": "E" } }
+  ],
+  "axisLabels": [
+    { "point": "R", "axis": "x", "label": "R*" },
+    { "point": "i", "axis": "y", "label": "i*" }
+  ]
+}
+\`\`\`
+
+**Key Points Explained:**
+- **Demand**: Using \`ampleReserve\` type for the reserve demand curve with ceiling and floor
+- **Supply**: Vertical reserve supply curve
+- **Discount Rate**: Separate horizontal line (ceiling) - can shift by changing \`y\` value
+- **IORB**: Separate horizontal line (floor) - can shift by changing \`y\` value and updating \`Demand\` curve's \`kinkY\`
+- **E**: Intersection of demand and supply curves (equilibrium point)
+- **Dashed lines**: From equilibrium to both axes for reading interest rate and reserve quantity
+
+**Showing Shifts:**
+- To show Discount Rate shift: Change \`Discount Rate\` curve's \`y\` value
+- To show IORB shift: Change \`IORB\` curve's \`y\` value AND update \`Demand\` curve's \`kinkY\` value
+- To show reserve supply shift: Change \`Supply\` curve's \`x\` value
+
 ## Best Practices
 
 - Use \`showMarker: true\` only for key points that need visual markers (like equilibrium points, intersections)
@@ -1309,6 +1412,17 @@ function parseChartConfig(config: Record<string, unknown>): ChartData {
       points: c.points,
       smooth: c.smooth,
       fromCurve: c.fromCurve,
+      fromAvcCurve: c.fromAvcCurve,
+      fromAfcCurve: c.fromAfcCurve,
+      k: c.k,
+      h: c.h,
+      v: c.v,
+      startX: c.startX,
+      kinkX: c.kinkX,
+      kinkY: c.kinkY,
+      discountRate: c.discountRate,
+      leftSlope: c.leftSlope,
+      flatY: c.flatY,
       color: c.color,
       dashed: c.dashed,
       lineWidth: c.lineWidth
