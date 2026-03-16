@@ -101,6 +101,13 @@ export function AboutDialog({ open, onOpenChange }: AboutDialogProps) {
                     <p className="text-xs font-medium text-foreground">Smart</p>
                     <p className="text-[10px] text-muted-foreground">Analysis</p>
                   </div>
+                  <div className="text-center group">
+                    <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-500/10 mb-2 group-hover:bg-emerald-500/20 transition-colors">
+                      <Sparkles className="w-5 h-5 text-emerald-500" />
+                    </div>
+                    <p className="text-xs font-medium text-foreground">AI</p>
+                    <p className="text-[10px] text-muted-foreground">Powered</p>
+                  </div>
                 </div>
               </div>
               
