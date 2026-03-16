@@ -1479,7 +1479,8 @@ export async function sendMessageStream(
 
   const formattedMessages: FormattedMessage[] = [
     { role: 'system', content: SYSTEM_PROMPT },
-    ...historyMessages
+    ...historyMessages,
+    { role: 'user', content: userContent }
   ]
 
   aiLogger.logMessageHistory(historyMessages)
